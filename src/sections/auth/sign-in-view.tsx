@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -11,18 +11,48 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import { useRouter } from 'src/routes/hooks';
 
+import useLogin from 'src/hooks/use-login';
+import { useDebounceForm } from 'src/hooks/use-debounce-form';
+
+import { useLoginMutation } from 'src/app/api/auth/authApiSlice';
+
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
+const form = {
+  initialState: {
+    email: '',
+    password: '',
+  },
+  requiredFields: ['email', 'password'],
+};
 
 export function SignInView() {
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSignIn = useCallback(() => {
+  const { formData, formError, handleInputChange, isValidForm } = useDebounceForm(form);
+
+  const [login, { isLoading }] = useLoginMutation();
+
+  const handleLogin = useLogin();
+
+  const handleSignIn = async () => {
+    if (!isValidForm()) {
+      return;
+    }
+
+    const data = await login(formData).unwrap();
+    if (!data) {
+      return;
+    }
+
+    handleLogin(data);
+    console.log('Login successful:', data);
+
     router.push('/');
-  }, [router]);
+  };
 
   const renderForm = (
     <Box
@@ -36,7 +66,10 @@ export function SignInView() {
         fullWidth
         name="email"
         label="Email address"
-        defaultValue="hello@gmail.com"
+        value={formData.email}
+        error={!!formError.email}
+        helperText={formError.email}
+        onChange={handleInputChange}
         sx={{ mb: 3 }}
         slotProps={{
           inputLabel: { shrink: true },
@@ -51,7 +84,15 @@ export function SignInView() {
         fullWidth
         name="password"
         label="Password"
-        defaultValue="@demo1234"
+        value={formData.password}
+        error={!!formError.password}
+        helperText={formError.password}
+        onChange={handleInputChange}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') {
+            handleSignIn();
+          }
+        }}
         type={showPassword ? 'text' : 'password'}
         slotProps={{
           inputLabel: { shrink: true },
@@ -74,7 +115,9 @@ export function SignInView() {
         type="submit"
         color="inherit"
         variant="contained"
+        disabled={!isValidForm()}
         onClick={handleSignIn}
+        loading={isLoading}
       >
         Sign in
       </Button>
