@@ -12,7 +12,10 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
+import { ROUTES } from 'src/routes/config';
 import { useRouter, usePathname } from 'src/routes/hooks';
+
+import useLogout from 'src/hooks/use-logout';
 
 import { _myAccount } from 'src/_mock';
 
@@ -33,6 +36,13 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
   const pathname = usePathname();
 
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
+
+  const handleLogout = useLogout();
+
+  const handleLogoutClick = () => {
+    handleLogout();
+    router.push(ROUTES.LOGIN);
+  }
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
     setOpenPopover(event.currentTarget);
@@ -129,7 +139,7 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Box sx={{ p: 1 }}>
-          <Button fullWidth color="error" size="medium" variant="text">
+          <Button fullWidth color="error" size="medium" variant="text" onClick={handleLogoutClick}>
             Logout
           </Button>
         </Box>

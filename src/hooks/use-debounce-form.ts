@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 import { validateField } from 'src/utils/validation';
 
@@ -23,6 +23,9 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
   const [inputValue, setInputValue] = useState<{ name: string; value: string } | null>(null);
   const [debouncedFields, setDebouncedFields] = useState<Set<string>>(new Set());
 
+  // Keep a mutable copy of formData
+  const formDataRef = useRef<T>(form.initialState);
+
   // Debounce the input value
   const debouncedInput = useDebounce(inputValue, delay);
 
@@ -32,7 +35,12 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
       const { name, value } = debouncedInput;
 
       // Validate the field and set error
-      const error = validateField(name, value, form.requiredFields.includes(name));
+      const error = validateField(
+        name,
+        value,
+        form.requiredFields.includes(name),
+        formDataRef.current
+      );
       setFormError((prevError) => ({ ...prevError, [name]: error }));
 
       // Remove the field from debouncedFields since it's being updated
@@ -47,9 +55,14 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setInputValue({ name, value });
+
     // Update form data
     setFormError((prevError) => ({ ...prevError, [name]: '' }));
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setFormData((prevData) => {
+      const updatedData = { ...prevData, [name]: value };
+      formDataRef.current = updatedData; // Update the ref copy
+      return updatedData;
+    });
 
     // Add the field to the debouncedFields set
     setDebouncedFields((prev) => new Set(prev).add(name));
@@ -57,9 +70,10 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
 
   const isValidForm = () => {
     // Check if all required fields are filled
-    const isAllRequiredFieldsFilled = form.requiredFields.every((field) => formData[field]);
+    const isAllRequiredFieldsFilled = form.requiredFields.every(
+      (field) => formDataRef.current[field]
+    );
     // Check if all debounced fields are processed
-    // If a field is in debouncedFields, it means it's being processed and not yet validated
     const isAllDebouncedFieldsProcessed = debouncedFields.size === 0;
     let isValid = isAllRequiredFieldsFilled && isAllDebouncedFieldsProcessed;
     // Check if there are any errors in formError

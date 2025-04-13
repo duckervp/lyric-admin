@@ -3,7 +3,7 @@ import { showErrorMessage, showSuccessMessage } from "src/utils/notify";
 
 export default function useNotify() {
 
-  const showErrorMsg = (error: any) => {
+  const handleError = (error: any) => {
     const { status, data } = error;
     let message;
     if (!status) {
@@ -26,5 +26,5 @@ export default function useNotify() {
     showErrorMessage(message);
   }
 
-  return { showErrorMsg, showSuccessMsg, showCustomErrorMsg };
+  return { handleError, showSuccessMsg, showCustomErrorMsg };
 }

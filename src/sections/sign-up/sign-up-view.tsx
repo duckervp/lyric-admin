@@ -18,48 +18,52 @@ import { useDebounceForm } from 'src/hooks/use-debounce-form';
 
 import { handleError } from 'src/utils/notify';
 
-import { useLoginMutation } from 'src/app/api/auth/authApiSlice';
+import { useRegisterMutation } from 'src/app/api/auth/authApiSlice';
 
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 const form = {
   initialState: {
+    name: '',
     email: '',
     password: '',
+    confirmPassword: '',
   },
-  requiredFields: ['email', 'password'],
+  requiredFields: ['name', 'email', 'password', 'confirmPassword'],
 };
 
-export function SignInView() {
+export function SignUpView() {
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
 
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const { formData, formError, handleInputChange, isValidForm } = useDebounceForm(form);
 
-  const [login, { isLoading }] = useLoginMutation();
+  const [register, { isLoading }] = useRegisterMutation();
 
   const handleLogin = useLogin();
 
-  const handleSignIn = async () => {
+  const handleSignUp = async () => {
     if (!isValidForm()) {
       return;
     }
 
     try {
-      const data = await login(formData).unwrap();
+      const data = await register(formData).unwrap();
       if (!data) {
         return;
       }
 
       handleLogin(data);
-      console.log('Login successful:', data);
+      console.log('Register successful:', data);
 
       router.push('/');
     } catch (error) {
-      console.log('Login error:', error);
-      handleError(error, 'Login failed!');
+      console.log('Register error:', error);
+      handleError(error, 'Register failed!');
     }
   };
 
@@ -71,6 +75,20 @@ export function SignInView() {
         flexDirection: 'column',
       }}
     >
+      <TextField
+        fullWidth
+        name="name"
+        label="Your name"
+        value={formData.name}
+        error={!!formError.name}
+        helperText={formError.name}
+        onChange={handleInputChange}
+        sx={{ mb: 3 }}
+        slotProps={{
+          inputLabel: { shrink: true },
+        }}
+      />
+
       <TextField
         fullWidth
         name="email"
@@ -85,10 +103,6 @@ export function SignInView() {
         }}
       />
 
-      <Link variant="body2" color="inherit" sx={{ mb: 1.5 }}>
-        Forgot password?
-      </Link>
-
       <TextField
         fullWidth
         name="password"
@@ -97,11 +111,6 @@ export function SignInView() {
         error={!!formError.password}
         helperText={formError.password}
         onChange={handleInputChange}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-            handleSignIn();
-          }
-        }}
         type={showPassword ? 'text' : 'password'}
         slotProps={{
           inputLabel: { shrink: true },
@@ -118,6 +127,32 @@ export function SignInView() {
         sx={{ mb: 3 }}
       />
 
+      <TextField
+        fullWidth
+        name="confirmPassword"
+        label="Confirm password"
+        value={formData.confirmPassword}
+        error={!!formError.confirmPassword}
+        helperText={formError.confirmPassword}
+        onChange={handleInputChange}
+        type={showConfirmPassword ? 'text' : 'password'}
+        slotProps={{
+          inputLabel: { shrink: true },
+          input: {
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)} edge="end">
+                  <Iconify
+                    icon={showConfirmPassword ? 'solar:eye-bold' : 'solar:eye-closed-bold'}
+                  />
+                </IconButton>
+              </InputAdornment>
+            ),
+          },
+        }}
+        sx={{ mb: 3 }}
+      />
+
       <Button
         fullWidth
         size="large"
@@ -125,10 +160,10 @@ export function SignInView() {
         color="inherit"
         variant="contained"
         disabled={!isValidForm()}
-        onClick={handleSignIn}
+        onClick={handleSignUp}
         loading={isLoading}
       >
-        Sign in
+        Sign up
       </Button>
     </Box>
   );
@@ -144,16 +179,16 @@ export function SignInView() {
           mb: 5,
         }}
       >
-        <Typography variant="h5">Sign in</Typography>
+        <Typography variant="h5">Sign up</Typography>
         <Typography
           variant="body2"
           sx={{
             color: 'text.secondary',
           }}
         >
-          Don’t have an account?
-          <Link component={RouterLink} variant="subtitle2" sx={{ ml: 0.5 }} to={ROUTES.REGISTER}>
-            Get started
+          Already have an account?
+          <Link component={RouterLink} variant="subtitle2" sx={{ ml: 0.5 }} to={ROUTES.LOGIN}>
+            Continue
           </Link>
         </Typography>
       </Box>
