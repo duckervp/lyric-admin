@@ -2,19 +2,24 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const validateField = (
   name: string,
-  value: string,
+  value: string | boolean,
   required: boolean,
   state: Record<string, any>
 ): string => {
   switch (name) {
+    case 'name':
+      if (!value && required) return 'Name is required!';
+      if (typeof value === 'string' && value.length < 3) return 'Name must be at least 3 characters!';
+      break;
+
     case 'email':
       if (!value && required) return 'Email is required!';
-      if (!emailRegex.test(value)) return 'Invalid email format!';
+      if (typeof value === 'string' && !emailRegex.test(value)) return 'Invalid email format!';
       break;
 
     case 'password':
       if (!value && required) return 'Password is required!';
-      if (value.length < 6) return 'Password must be at least 6 characters!';
+      if (typeof value === 'string' && value.length < 6) return 'Password must be at least 6 characters!';
       break;
     
       case 'confirmPassword':
@@ -24,7 +29,7 @@ export const validateField = (
 
     case 'username':
       if (!value && required) return 'Username is required!';
-      if (value.length < 3) return 'Username must be at least 3 characters!';
+      if (typeof value === 'string' && value.length < 3) return 'Username must be at least 3 characters!';
       break;
 
     default:

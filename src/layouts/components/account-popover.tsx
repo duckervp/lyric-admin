@@ -18,6 +18,8 @@ import { useRouter, usePathname } from 'src/routes/hooks';
 import useLogout from 'src/hooks/use-logout';
 
 import { _myAccount } from 'src/_mock';
+import { useAppSelector } from 'src/app/hooks';
+import { selectCurrentUser } from 'src/app/api/auth/authSlice';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +36,8 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
   const router = useRouter();
 
   const pathname = usePathname();
+
+  const user = useAppSelector(selectCurrentUser);
 
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
@@ -74,8 +78,8 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
         }}
         {...other}
       >
-        <Avatar src={_myAccount.photoURL} alt={_myAccount.displayName} sx={{ width: 1, height: 1 }}>
-          {_myAccount.displayName.charAt(0).toUpperCase()}
+        <Avatar src={_myAccount.photoURL} alt={user?.name} sx={{ width: 1, height: 1 }}>
+          {user?.name.charAt(0).toUpperCase()}
         </Avatar>
       </IconButton>
 
@@ -93,11 +97,11 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
       >
         <Box sx={{ p: 2, pb: 1.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {_myAccount?.displayName}
+            {user?.name}
           </Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {_myAccount?.email}
+            {user?.email}
           </Typography>
         </Box>
 

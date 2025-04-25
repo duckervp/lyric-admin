@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -8,19 +7,19 @@ import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import InputAdornment from '@mui/material/InputAdornment';
 
 import { ROUTES } from 'src/routes/config';
 import { useRouter } from 'src/routes/hooks';
 
 import useLogin from 'src/hooks/use-login';
-import { useDebounceForm } from 'src/hooks/use-debounce-form';
+import useDebounceForm from 'src/hooks/use-debounce-form';
 
 import { handleError } from 'src/utils/notify';
 
 import { useLoginMutation } from 'src/app/api/auth/authApiSlice';
 
 import { Iconify } from 'src/components/iconify';
+import Password from 'src/components/textfield/password';
 
 // ----------------------------------------------------------------------
 const form = {
@@ -33,8 +32,6 @@ const form = {
 
 export function SignInView() {
   const router = useRouter();
-
-  const [showPassword, setShowPassword] = useState(false);
 
   const { formData, formError, handleInputChange, isValidForm } = useDebounceForm(form);
 
@@ -89,32 +86,13 @@ export function SignInView() {
         Forgot password?
       </Link>
 
-      <TextField
-        fullWidth
+      <Password
         name="password"
         label="Password"
-        value={formData.password}
-        error={!!formError.password}
-        helperText={formError.password}
+        formData={formData}
+        formError={formError}
         onChange={handleInputChange}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-            handleSignIn();
-          }
-        }}
-        type={showPassword ? 'text' : 'password'}
-        slotProps={{
-          inputLabel: { shrink: true },
-          input: {
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                  <Iconify icon={showPassword ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          },
-        }}
+        onEnter={handleSignIn}
         sx={{ mb: 3 }}
       />
 

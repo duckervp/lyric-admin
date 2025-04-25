@@ -1,14 +1,14 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 
 import { validateField } from 'src/utils/validation';
 
 import { useDebounce } from './use-debounce';
 
-export function useDebounceForm<T extends Record<string, any>>(form: Form<T>) {
+export default function useDebounceForm<T extends Record<string, any>>(form: Form<T>) {
   return useCustomDelayDebounceForm(form, 500);
 }
 
-type Form<T> = {
+export type Form<T> = {
   initialState: T;
   requiredFields: string[];
 };
@@ -18,9 +18,20 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
   delay: number
 ) {
   const [formData, setFormData] = useState<T>(form.initialState);
-  const [formError, setFormError] = useState<T>(form.initialState);
+  const [formError, setFormError] = useState<Record<keyof T, string>>(
+    Object.keys(form.initialState).reduce(
+      (acc, key) => {
+        acc[key as keyof T] = '';
+        return acc;
+      },
+      {} as Record<keyof T, string>
+    )
+  );
 
-  const [inputValue, setInputValue] = useState<{ name: string; value: string } | null>(null);
+  const [inputValue, setInputValue] = useState<{
+    name: string;
+    value: string | boolean;
+  } | null>(null);
   const [debouncedFields, setDebouncedFields] = useState<Set<string>>(new Set());
 
   // Keep a mutable copy of formData
@@ -52,38 +63,50 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
     }
   }, [debouncedInput, form.requiredFields]);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setInputValue({ name, value });
+  const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const { type, name, value: val, checked } = event.target;
+    console.log(type);
+
+    const value = type === 'checkbox' ? checked : val;
+
+    if (['text', 'password'].includes(type)) {
+      setInputValue({ name, value });
+
+      setFormError((prevError) => ({ ...prevError, [name]: '' }));
+
+      // Add the field to the debouncedFields set
+      setDebouncedFields((prev) => new Set(prev).add(name));
+    }
 
     // Update form data
-    setFormError((prevError) => ({ ...prevError, [name]: '' }));
     setFormData((prevData) => {
       const updatedData = { ...prevData, [name]: value };
       formDataRef.current = updatedData; // Update the ref copy
       return updatedData;
     });
-
-    // Add the field to the debouncedFields set
-    setDebouncedFields((prev) => new Set(prev).add(name));
-  };
+  }, []);
 
   const isValidForm = () => {
-    // Check if all required fields are filled
-    const isAllRequiredFieldsFilled = form.requiredFields.every(
-      (field) => formDataRef.current[field]
-    );
-    // Check if all debounced fields are processed
-    const isAllDebouncedFieldsProcessed = debouncedFields.size === 0;
-    let isValid = isAllRequiredFieldsFilled && isAllDebouncedFieldsProcessed;
-    // Check if there are any errors in formError
-    Object.keys(formError).forEach((key) => {
-      if (formError[key as keyof T]) {
-        isValid = false;
-      }
-    });
-    return isValid;
+    const allFilled = form.requiredFields.every((field) => formDataRef.current[field]);
+
+    const noErrors = Object.values(formError).every((val) => !val);
+    
+    const noDebouncePending = debouncedFields.size === 0;
+
+    return allFilled && noErrors && noDebouncePending;
   };
 
-  return { formData, formError, handleInputChange, setFormError, isValidForm };
+  const resetForm = useCallback(
+    (data?: Partial<typeof form.initialState>) => {
+      const newFormData = { ...form.initialState, ...data };
+      setFormData(newFormData);
+      setFormError(form.initialState);
+      setInputValue(null);
+      setDebouncedFields(new Set());
+      formDataRef.current = newFormData; // Reset the ref copy
+    },
+    [form]
+  );
+
+  return { formData, formError, handleInputChange, setFormError, isValidForm, resetForm };
 }

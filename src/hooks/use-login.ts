@@ -8,9 +8,9 @@ export default function useLogin() {
 
   const handleLogin = (response: any) => {
     const { accessToken, refreshToken } = response.data;
-    const { userId, username, role } = jwtDecode(accessToken) as any;
+    const { userId, name, email , role } = jwtDecode(accessToken) as any;
     dispatch(setCredentials({ accessToken, refreshToken }));
-    dispatch(setUser({ id: userId, username, role }));
+    dispatch(setUser({ id: userId, name, email, role }));
   };
 
   return handleLogin;

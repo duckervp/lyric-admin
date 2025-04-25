@@ -1,5 +1,3 @@
-import type { UserProps } from './user-table-row';
-
 // ----------------------------------------------------------------------
 
 export const visuallyHidden = {
@@ -53,12 +51,13 @@ export function getComparator<Key extends keyof any>(
 // ----------------------------------------------------------------------
 
 type ApplyFilterProps = {
-  inputData: UserProps[];
+  inputData: any[];
   filterName: string;
   comparator: (a: any, b: any) => number;
 };
 
 export function applyFilter({ inputData, comparator, filterName }: ApplyFilterProps) {
+  if (!inputData) inputData = [];
   const stabilizedThis = inputData.map((el, index) => [el, index] as const);
 
   stabilizedThis.sort((a, b) => {

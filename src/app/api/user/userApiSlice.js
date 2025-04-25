@@ -27,6 +27,12 @@ export const authApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ['User'],
     }),
+    getUserById: builder.query({
+      query: (id) => ({
+        url: `${API.user}/${id}`,
+        method: "GET"
+      }),
+    }),
     getUserDetail: builder.mutation({
       query: (id) => ({
         url: `${API.user}/${id}`,
@@ -70,6 +76,7 @@ export const {
   useChangeNameMutation,
   useUpdateAvatarMutation,
   useGetAllUsersQuery,
+  useGetUserByIdQuery,
   useGetUserDetailMutation,
   useCreateUserMutation,
   useDeleteUserMutation,

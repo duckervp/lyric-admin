@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -8,19 +7,19 @@ import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import InputAdornment from '@mui/material/InputAdornment';
 
 import { ROUTES } from 'src/routes/config';
 import { useRouter } from 'src/routes/hooks';
 
 import useLogin from 'src/hooks/use-login';
-import { useDebounceForm } from 'src/hooks/use-debounce-form';
+import useDebounceForm from 'src/hooks/use-debounce-form';
 
 import { handleError } from 'src/utils/notify';
 
 import { useRegisterMutation } from 'src/app/api/auth/authApiSlice';
 
 import { Iconify } from 'src/components/iconify';
+import Password from 'src/components/textfield/password';
 
 // ----------------------------------------------------------------------
 const form = {
@@ -35,10 +34,6 @@ const form = {
 
 export function SignUpView() {
   const router = useRouter();
-
-  const [showPassword, setShowPassword] = useState(false);
-
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { formData, formError, handleInputChange, isValidForm } = useDebounceForm(form);
 
@@ -103,53 +98,21 @@ export function SignUpView() {
         }}
       />
 
-      <TextField
-        fullWidth
+      <Password
         name="password"
         label="Password"
-        value={formData.password}
-        error={!!formError.password}
-        helperText={formError.password}
+        formData={formData}
+        formError={formError}
         onChange={handleInputChange}
-        type={showPassword ? 'text' : 'password'}
-        slotProps={{
-          inputLabel: { shrink: true },
-          input: {
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                  <Iconify icon={showPassword ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          },
-        }}
         sx={{ mb: 3 }}
       />
 
-      <TextField
-        fullWidth
+      <Password
         name="confirmPassword"
         label="Confirm password"
-        value={formData.confirmPassword}
-        error={!!formError.confirmPassword}
-        helperText={formError.confirmPassword}
+        formData={formData}
+        formError={formError}
         onChange={handleInputChange}
-        type={showConfirmPassword ? 'text' : 'password'}
-        slotProps={{
-          inputLabel: { shrink: true },
-          input: {
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)} edge="end">
-                  <Iconify
-                    icon={showConfirmPassword ? 'solar:eye-bold' : 'solar:eye-closed-bold'}
-                  />
-                </IconButton>
-              </InputAdornment>
-            ),
-          },
-        }}
         sx={{ mb: 3 }}
       />
 

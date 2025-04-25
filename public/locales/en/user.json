@@ -1,0 +1,17 @@
+{
+  "user-form-dialog": {
+    "new-title": "New User",
+    "edit-title": "Edit User",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "active": "Active",
+      "role": "Admin",
+      "verified": "Verified",
+      "password": "Password",
+      "change-password": "Change password",
+      "new-password": "New password",
+      "confirm-password": "Confirm password"
+    }
+  }
+}

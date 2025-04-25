@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 import { CONFIG } from "src/config-global";
 
-export const handleError = (err: any, defaultMessage: string) => {
+export const handleError = (err: any, defaultMessage?: string) => {
   console.log(err)
   const { status, data } = err
   let message;
