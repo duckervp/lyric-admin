@@ -17,7 +17,7 @@ import { apiSlice, noAuthApiSlice } from "./api/apiSlice";
 const authPersistConfig = {
   key: 'auth',
   storage,
-  blacklist: ['token']
+  blacklist: ['accessToken']
 }
 
 const rootReducer = combineReducers({

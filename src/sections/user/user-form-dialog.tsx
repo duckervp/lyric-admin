@@ -19,7 +19,10 @@ import { useGetUserByIdQuery, useCreateUserMutation } from 'src/app/api/user/use
 
 import Fallback from 'src/components/loading/fallback';
 import Password from 'src/components/textfield/password';
-import EditDialog from 'src/components/dialog/edit-dialog';
+import EditDialog from 'src/components/popup/edit-dialog';
+import { TextInput } from 'src/components/input/text-input';
+import { SwitchInput } from 'src/components/input/switch-input';
+import { PasswordInput } from 'src/components/input/password-input';
 //-------------------------------------------------------------------------
 
 type UserFormDialogProps = {
@@ -75,7 +78,7 @@ export default function UserFormDialog({ id, removeId, open, setOpen }: UserForm
     }
   };
 
-  const handleCancel = () => {
+  const handlePopupClose = () => {
     setOpen(false);
     removeId();
     resetForm();
@@ -90,112 +93,72 @@ export default function UserFormDialog({ id, removeId, open, setOpen }: UserForm
       open={open}
       canSave={isValidForm()}
       onSave={handleSave}
-      onCancel={handleCancel}
+      onPopupClose={handlePopupClose}
       title={id ? t('edit-title') : t('new-title')}
+      width="800px"
     >
       <Stack spacing={3}>
-        <Box>
-          <Typography variant="subtitle2">
-            <span style={{ color: 'red' }}>*</span> {t('form.name')}
-          </Typography>
-          <TextField
-            name="name"
-            fullWidth
-            autoComplete="off"
-            value={formData.name}
-            onChange={handleInputChange}
-            error={!!formError.name}
-            helperText={formError.name}
-          />
-        </Box>
+        <TextInput
+          required
+          label={t('form.name')}
+          name="name"
+          value={formData.name}
+          error={formError.name}
+          handleInputChange={handleInputChange}
+        />
 
-        <Box>
-          <Typography variant="subtitle2">
-            <span style={{ color: 'red' }}>*</span> {t('form.email')}
-          </Typography>
-          <TextField
-            fullWidth
-            name="email"
-            autoComplete="off"
-            value={formData.email}
-            onChange={handleInputChange}
-            error={!!formError.email}
-            helperText={formError.email}
-          />
-        </Box>
+        <TextInput
+          required
+          type="email"
+          label={t('form.email')}
+          name="email"
+          value={formData.email}
+          error={formError.email}
+          handleInputChange={handleInputChange}
+        />
 
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ width: 200 }}
-        >
-          <Typography variant="subtitle2">{t('form.role')}</Typography>
-          <Switch
-            name="admin"
-            slotProps={{ input: { 'aria-label': 'Role switch' } }}
-            checked={formData.admin}
-            onChange={handleInputChange}
-          />
-        </Stack>
+        <SwitchInput
+          label={t('form.role')}
+          name="admin"
+          value={formData.admin}
+          handleInputChange={handleInputChange}
+        />
 
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ width: 200 }}
-        >
-          <Typography variant="subtitle2">{t('form.verified')}</Typography>
-          <Switch
-            name="isVerified"
-            slotProps={{ input: { 'aria-label': 'Verified switch' } }}
-            checked={formData.isVerified}
-            onChange={handleInputChange}
-          />
-        </Stack>
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ width: 200 }}
-        >
-          <Typography variant="subtitle2">{t('form.active')}</Typography>
-          <Switch
-            name="active"
-            slotProps={{ input: { 'aria-label': 'Status switch' } }}
-            checked={formData.active}
-            onChange={handleInputChange}
-          />
-        </Stack>
+        <SwitchInput
+          label={t('form.verified')}
+          name="isVerified"
+          value={formData.isVerified}
+          handleInputChange={handleInputChange}
+        />
 
-        <Box>
+        <SwitchInput
+          label={t('form.active')}
+          name="active"
+          value={formData.active}
+          handleInputChange={handleInputChange}
+        />
+
+        <Stack spacing={3}>
           {id && (
-            <Stack
-              direction="row"
-              alignItems="center"
-              justifyContent="space-between"
-              sx={{ width: 200 }}
-            >
-              <Typography variant="subtitle2"> {t('form.change-password')} </Typography>
-              <Switch
-                sx={{ inputProps: { ariaLabel: 'Role switch' } }}
-                checked={updatePassword}
-                onChange={(e) => setUpdatePassword(e.target.checked)}
-              />
-            </Stack>
+            <SwitchInput
+              label={t('form.change-password')}
+              name="updatePassword"
+              value={updatePassword}
+              handleInputChange={(e) => setUpdatePassword(e.target.checked)}
+            />
           )}
 
           {(!id || updatePassword) && (
-            <Password
-              upperLabel
-              name="password"
+            <PasswordInput
+              required
               label={t('form.password')}
-              formData={formData}
-              formError={formError}
-              onChange={handleInputChange}
+              name="password"
+              value={formData.password}
+              error={formError.password}
+              handleInputChange={handleInputChange}
             />
           )}
-        </Box>
+        </Stack>
       </Stack>
 
       {/* <Stack sx={{ mt: 3 }}>

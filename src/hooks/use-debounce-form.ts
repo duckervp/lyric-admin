@@ -19,13 +19,11 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
 ) {
   const [formData, setFormData] = useState<T>(form.initialState);
   const [formError, setFormError] = useState<Record<keyof T, string>>(
-    Object.keys(form.initialState).reduce(
-      (acc, key) => {
-        acc[key as keyof T] = '';
-        return acc;
-      },
-      {} as Record<keyof T, string>
-    )
+    () =>
+      Object.fromEntries(Object.keys(form.initialState).map((key) => [key, ''])) as Record<
+        keyof T,
+        string
+      >
   );
 
   const [inputValue, setInputValue] = useState<{
@@ -48,10 +46,11 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
       // Validate the field and set error
       const error = validateField(
         name,
-        value,
+        value as string,
         form.requiredFields.includes(name),
         formDataRef.current
       );
+      console.log('error', error);
       setFormError((prevError) => ({ ...prevError, [name]: error }));
 
       // Remove the field from debouncedFields since it's being updated
@@ -65,11 +64,10 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
 
   const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const { type, name, value: val, checked } = event.target;
-    console.log(type);
-
+    
     const value = type === 'checkbox' ? checked : val;
 
-    if (['text', 'password'].includes(type)) {
+    if (['text', 'password', 'number', 'email', 'gender', 'store-select'].includes(type)) {
       setInputValue({ name, value });
 
       setFormError((prevError) => ({ ...prevError, [name]: '' }));
@@ -84,15 +82,12 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
       formDataRef.current = updatedData; // Update the ref copy
       return updatedData;
     });
-  }, []);
+  }, [formError]);
 
   const isValidForm = () => {
     const allFilled = form.requiredFields.every((field) => formDataRef.current[field]);
-
     const noErrors = Object.values(formError).every((val) => !val);
-    
     const noDebouncePending = debouncedFields.size === 0;
-
     return allFilled && noErrors && noDebouncePending;
   };
 
@@ -100,7 +95,12 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
     (data?: Partial<typeof form.initialState>) => {
       const newFormData = { ...form.initialState, ...data };
       setFormData(newFormData);
-      setFormError(form.initialState);
+      setFormError(
+        Object.fromEntries(Object.keys(form.initialState).map((key) => [key, ''])) as Record<
+          keyof T,
+          string
+        >
+      );
       setInputValue(null);
       setDebouncedFields(new Set());
       formDataRef.current = newFormData; // Reset the ref copy

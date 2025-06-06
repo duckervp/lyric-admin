@@ -13,7 +13,7 @@ import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
-type RowConfig = {
+export type RowConfigs = {
   field: string;
   align?: 'left' | 'center' | 'right';
   width?: number | string;
@@ -23,7 +23,7 @@ type RowConfig = {
 
 type CustomTableRowProps = {
   row: { id: number; [key: string]: any };
-  config: RowConfig;
+  config: RowConfigs;
   selected: boolean;
   onSelectRow: () => void;
   onEditRow: (id: number) => void;
