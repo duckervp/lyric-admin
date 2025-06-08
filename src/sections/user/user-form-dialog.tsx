@@ -3,11 +3,7 @@ import type { Form } from 'src/hooks/use-debounce-form';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
 
 import { ROLES } from 'src/routes/config';
 
@@ -18,7 +14,6 @@ import { handleError } from 'src/utils/notify';
 import { useGetUserByIdQuery, useCreateUserMutation } from 'src/app/api/user/userApiSlice';
 
 import Fallback from 'src/components/loading/fallback';
-import Password from 'src/components/textfield/password';
 import EditDialog from 'src/components/popup/edit-dialog';
 import { TextInput } from 'src/components/input/text-input';
 import { SwitchInput } from 'src/components/input/switch-input';
