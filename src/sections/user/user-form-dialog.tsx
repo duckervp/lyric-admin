@@ -1,12 +1,9 @@
 import type { Form } from 'src/hooks/use-debounce-form';
 
-import { useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import { ROLES } from 'src/routes/config';
@@ -14,11 +11,15 @@ import { ROLES } from 'src/routes/config';
 import useDebounceForm from 'src/hooks/use-debounce-form';
 
 import { handleError } from 'src/utils/notify';
+import { fDateTime } from 'src/utils/format-time';
 
-import { useGetUserByIdQuery, useCreateUserMutation } from 'src/app/api/user/userApiSlice';
+import {
+  useGetUserByIdQuery,
+  useCreateUserMutation,
+  useUpdateUserMutation,
+} from 'src/app/api/user/userApiSlice';
 
 import Fallback from 'src/components/loading/fallback';
-import Password from 'src/components/textfield/password';
 import EditDialog from 'src/components/popup/edit-dialog';
 import { TextInput } from 'src/components/input/text-input';
 import { SwitchInput } from 'src/components/input/switch-input';
@@ -39,40 +40,68 @@ const form: Form<any> = {
     password: '',
     admin: false,
     active: false,
-    isVerified: false,
+    verified: false,
   },
   requiredFields: ['name', 'email', 'password'],
 };
+
+const mapPayload = (formData: any) => ({
+  name: formData.name,
+  email: formData.email,
+  password: formData.password,
+  role: formData.admin ? ROLES.ADMIN : ROLES.USER,
+  active: formData.active,
+  verified: formData.verified,
+});
 
 export default function UserFormDialog({ id, removeId, open, setOpen }: UserFormDialogProps) {
   const { t } = useTranslation('user', { keyPrefix: 'user-form-dialog' });
 
   const { data, isLoading } = useGetUserByIdQuery(id, { skip: !id });
   const [createUser] = useCreateUserMutation();
-
-  const { formData, formError, handleInputChange, isValidForm, resetForm } = useDebounceForm(form);
+  const [updateUser] = useUpdateUserMutation();
 
   const [updatePassword, setUpdatePassword] = useState(false);
 
-  useEffect(() => {
-    const userData = data?.data;
-
-    if (id && userData) {
-      resetForm({
-        name: userData.name || '',
-        email: userData.email || '',
-        password: '', // don't prefill passwords usually
-        admin: userData.role === ROLES.ADMIN,
-        active: userData.active ?? false,
-        isVerified: userData.isVerified ?? false,
-      });
+  const initialState = useMemo(() => {
+    if (id && data?.data) {
+      const user = data.data;
+      return {
+        name: user.name || '',
+        email: user.email || '',
+        password: '',
+        admin: user.role === ROLES.ADMIN,
+        active: !!user.active,
+        verified: !!user.verified,
+      };
     }
-  }, [id, data, resetForm]);
+    return form.initialState;
+  }, [id, data]);
+
+  const formRequiredFields = useMemo(() => {
+    if (id && data?.data) {
+      return ['name', 'email'];
+    }
+    return form.requiredFields;
+  }, [id, data]);
+
+  const { formData, formError, handleInputChange, isValidForm, resetForm } = useDebounceForm({
+    initialState,
+    requiredFields: formRequiredFields,
+  });
 
   const handleSave = async () => {
-    console.log(formData);
     try {
-      await createUser(formData).unwrap();
+      const payload = mapPayload(formData);
+      if (id) {
+        if (!updatePassword) {
+          delete payload.password;
+        }
+        await updateUser({ id, payload }).unwrap();
+      } else {
+        await createUser(payload).unwrap();
+      }
+      handlePopupClose();
     } catch (error) {
       handleError(error);
     }
@@ -126,8 +155,8 @@ export default function UserFormDialog({ id, removeId, open, setOpen }: UserForm
 
         <SwitchInput
           label={t('form.verified')}
-          name="isVerified"
-          value={formData.isVerified}
+          name="verified"
+          value={formData.verified}
           handleInputChange={handleInputChange}
         />
 
@@ -150,8 +179,7 @@ export default function UserFormDialog({ id, removeId, open, setOpen }: UserForm
 
           {(!id || updatePassword) && (
             <PasswordInput
-              required
-              label={t('form.password')}
+              externalLabel={t('form.password')}
               name="password"
               value={formData.password}
               error={formError.password}
@@ -161,20 +189,20 @@ export default function UserFormDialog({ id, removeId, open, setOpen }: UserForm
         </Stack>
       </Stack>
 
-      {/* <Stack sx={{ mt: 3 }}>
-            {!isCreateScreen && auditData.createdBy && auditData.createdAt && (
-              <Typography variant="body2">
-                {t('form.created-by')}: <b>{auditData.createdBy}</b> {t('form.in')}{' '}
-                <b>{fDateTime(auditData.createdAt)}</b>
-              </Typography>
-            )}
-            {isDetailScreen && auditData.updatedAt && auditData.updatedBy && (
-              <Typography variant="body2">
-                {t('form.updated-by')}: <b>{auditData.updatedBy}</b> {t('form.in')}{' '}
-                <b>{fDateTime(auditData.updatedAt)}</b>
-              </Typography>
-            )}
-          </Stack> */}
+      <Stack sx={{ mt: 3 }}>
+        {id && data?.data?.createdBy && data?.data?.createdAt && (
+          <Typography variant="body2">
+            {t('form.created-by')} <b>{data?.data?.createdBy}</b> {t('form.in')}{' '}
+            <b>{fDateTime(data?.data?.createdAt)}</b>
+          </Typography>
+        )}
+        {id && data?.data?.updatedAt && data?.data?.updatedBy && (
+          <Typography variant="body2">
+            {t('form.updated-by')} <b>{data?.data?.updatedBy}</b> {t('form.in')}{' '}
+            <b>{fDateTime(data?.data?.updatedAt)}</b>
+          </Typography>
+        )}
+      </Stack>
     </EditDialog>
   );
 }

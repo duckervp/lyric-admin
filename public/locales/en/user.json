@@ -11,7 +11,12 @@
       "password": "Password",
       "change-password": "Change password",
       "new-password": "New password",
-      "confirm-password": "Confirm password"
+      "confirm-password": "Confirm password",
+      "created-by": "Created by",
+      "updated-by": "Updated by",
+      "created-at": "Created at",
+      "updated-at": "Updated at",
+      "in": "in"
     }
   }
 }

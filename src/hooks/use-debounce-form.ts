@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 
+import { shallowEqual } from 'src/utils/check';
 import { validateField } from 'src/utils/validation';
 
 import { useDebounce } from './use-debounce';
@@ -62,9 +63,28 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
     }
   }, [debouncedInput, form.requiredFields]);
 
+  useEffect(() => {
+    setFormData(form.initialState);
+    formDataRef.current = form.initialState;
+    setFormError(
+      Object.fromEntries(Object.keys(form.initialState).map((key) => [key, ''])) as Record<
+        keyof T,
+        string
+      >
+    );
+    setInputValue(null);
+    setDebouncedFields(new Set());
+  }, [form.initialState]);
+
+  useEffect(() => {
+    if (shallowEqual(formDataRef.current, form.initialState)) return; // avoid overwriting manual edits
+    setFormData(form.initialState);
+    formDataRef.current = form.initialState;
+  }, [form.initialState]);
+
   const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const { type, name, value: val, checked } = event.target;
-    
+
     const value = type === 'checkbox' ? checked : val;
 
     if (['text', 'password', 'number', 'email', 'gender', 'store-select'].includes(type)) {
@@ -82,13 +102,21 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
       formDataRef.current = updatedData; // Update the ref copy
       return updatedData;
     });
-  }, [formError]);
+  }, []);
 
   const isValidForm = () => {
+    console.log("requiredF", form.requiredFields);
+    
     const allFilled = form.requiredFields.every((field) => formDataRef.current[field]);
+    console.log("allFilled", allFilled);
+
     const noErrors = Object.values(formError).every((val) => !val);
+    console.log("noErrors", noErrors);
+
     const noDebouncePending = debouncedFields.size === 0;
-    return allFilled && noErrors && noDebouncePending;
+    console.log("noDebouncePending", noDebouncePending);
+
+    return allFilled && noErrors && noDebouncePending && !shallowEqual(form.initialState, formDataRef.current);
   };
 
   const resetForm = useCallback(

@@ -19,7 +19,7 @@ import { handleError } from 'src/utils/notify';
 import { useRegisterMutation } from 'src/app/api/auth/authApiSlice';
 
 import { Iconify } from 'src/components/iconify';
-import Password from 'src/components/textfield/password';
+import { PasswordInput } from 'src/components/input/password-input';
 
 // ----------------------------------------------------------------------
 const form = {
@@ -98,21 +98,23 @@ export function SignUpView() {
         }}
       />
 
-      <Password
-        name="password"
+      <PasswordInput
+        required
         label="Password"
-        formData={formData}
-        formError={formError}
-        onChange={handleInputChange}
+        name="password"
+        value={formData.password}
+        error={formError.password}
+        handleInputChange={handleInputChange}
         sx={{ mb: 3 }}
       />
 
-      <Password
-        name="confirmPassword"
+      <PasswordInput
+        required
         label="Confirm password"
-        formData={formData}
-        formError={formError}
-        onChange={handleInputChange}
+        name="confirmPassword"
+        value={formData.password}
+        error={formError.password}
+        handleInputChange={handleInputChange}
         sx={{ mb: 3 }}
       />
 

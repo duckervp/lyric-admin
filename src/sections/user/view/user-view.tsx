@@ -34,7 +34,7 @@ export type UserProps = {
   active: string;
   company: string;
   imageUrl: string;
-  isVerified: boolean;
+  verified: boolean;
 };
 
 export function UserView() {
@@ -135,7 +135,7 @@ export function UserView() {
                   { id: 'name', label: 'Name' },
                   { id: 'email', label: 'Email' },
                   { id: 'role', label: 'Role' },
-                  { id: 'isVerified', label: 'Verified', align: 'center' },
+                  { id: 'verified', label: 'Verified', align: 'center' },
                   { id: 'active', label: 'Status' },
                   { id: '' },
                 ]}
@@ -171,10 +171,10 @@ export function UserView() {
                         { field: 'email' },
                         { field: 'role' },
                         {
-                          field: 'isVerified',
+                          field: 'verified',
                           align: 'center',
                           render: () =>
-                            row.isVerified ? (
+                            row.verified ? (
                               <Iconify
                                 width={22}
                                 icon="solar:check-circle-bold"

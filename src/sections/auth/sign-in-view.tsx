@@ -19,7 +19,7 @@ import { handleError } from 'src/utils/notify';
 import { useLoginMutation } from 'src/app/api/auth/authApiSlice';
 
 import { Iconify } from 'src/components/iconify';
-import Password from 'src/components/textfield/password';
+import { PasswordInput } from 'src/components/input/password-input';
 
 // ----------------------------------------------------------------------
 const form = {
@@ -86,13 +86,13 @@ export function SignInView() {
         Forgot password?
       </Link>
 
-      <Password
-        name="password"
+      <PasswordInput
+        required
         label="Password"
-        formData={formData}
-        formError={formError}
-        onChange={handleInputChange}
-        onEnter={handleSignIn}
+        name="password"
+        value={formData.password}
+        error={formError.password}
+        handleInputChange={handleInputChange}
         sx={{ mb: 3 }}
       />
 

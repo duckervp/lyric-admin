@@ -39,8 +39,7 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
       api,
       extraOptions
     );
-    console.log("ref");
-    
+
     if (!refreshResult.error && refreshResult.data) {
       const refreshData = refreshResult.data as {
         data: { accessToken: string; refreshToken: string };
@@ -50,11 +49,9 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
         api.dispatch(setCredentials({ accessToken, refreshToken }));
         result = await baseQuery(args, api, extraOptions);
       } else {
-        console.log("ref error111");
         api.dispatch(logout());
       }
     } else {
-      console.log("ref error");
       api.dispatch(logout());
     }
   }

@@ -9,7 +9,7 @@ export const validateField = (
   switch (name) {
     case 'name':
       if (!value && required) return 'Name is required!';
-      if (typeof value === 'string' && value.length < 3) return 'Name must be at least 3 characters!';
+      if (typeof value === 'string' && value.length > 0 && value.length < 3) return 'Name must be at least 3 characters!';
       break;
 
     case 'email':
@@ -19,17 +19,17 @@ export const validateField = (
 
     case 'password':
       if (!value && required) return 'Password is required!';
-      if (typeof value === 'string' && value.length < 6) return 'Password must be at least 6 characters!';
+      if (typeof value === 'string' && value.length > 0 && value.length < 6) return 'Password must be at least 6 characters!';
       break;
-    
-      case 'confirmPassword':
+
+    case 'confirmPassword':
       if (!value && required) return 'Password is required!';
       if (value !== state.password) return 'Passwords do not match!';
       break;
 
     case 'username':
       if (!value && required) return 'Username is required!';
-      if (typeof value === 'string' && value.length < 3) return 'Username must be at least 3 characters!';
+      if (typeof value === 'string' && value.length > 0 && value.length < 3) return 'Username must be at least 3 characters!';
       break;
 
     default:
