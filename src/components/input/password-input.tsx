@@ -10,19 +10,31 @@ import { Iconify } from '../iconify';
 //----------------------------------------------------------------
 type PasswordInputProps = {
   label?: string;
+<<<<<<< HEAD
   externalLabel?: string;
+=======
+  inpLabel?: string,
+>>>>>>> main
   name: string;
   required?: boolean;
   value: string;
   error: string;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onEnter?: () => void;
+<<<<<<< HEAD
   sx?: object;
+=======
+  sx?: any;
+>>>>>>> main
 };
 
 export function PasswordInput({
   label,
+<<<<<<< HEAD
   externalLabel,
+=======
+  inpLabel,
+>>>>>>> main
   name,
   required,
   value,
@@ -35,7 +47,11 @@ export function PasswordInput({
 
   return (
     <Box sx={{ width: '100%', ...sx }}>
+<<<<<<< HEAD
       {externalLabel && (
+=======
+      {label && (
+>>>>>>> main
         <Typography variant="body2">
           {externalLabel}
           {required && (
@@ -47,6 +63,7 @@ export function PasswordInput({
       )}
       <TextField
         fullWidth
+        label={inpLabel}
         name={name}
         label={label}
         type={showPassword ? 'text' : 'password'}

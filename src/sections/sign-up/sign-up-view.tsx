@@ -99,8 +99,12 @@ export function SignUpView() {
       />
 
       <PasswordInput
+<<<<<<< HEAD
         required
         label="Password"
+=======
+        inpLabel="Password"
+>>>>>>> main
         name="password"
         value={formData.password}
         error={formError.password}
@@ -109,11 +113,18 @@ export function SignUpView() {
       />
 
       <PasswordInput
+<<<<<<< HEAD
         required
         label="Confirm password"
         name="confirmPassword"
         value={formData.password}
         error={formError.password}
+=======
+        inpLabel="Confirm password"
+        name="confirmPassword"
+        value={formData.confirmPassword}
+        error={formError.confirmPassword}
+>>>>>>> main
         handleInputChange={handleInputChange}
         sx={{ mb: 3 }}
       />
