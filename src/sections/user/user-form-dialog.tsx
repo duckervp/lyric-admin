@@ -91,19 +91,14 @@ export default function UserFormDialog({ id, removeId, open, setOpen }: UserForm
   });
 
   const handleSave = async () => {
-    try {
-      const payload = mapPayload(formData);
-      if (id) {
-        if (!updatePassword) {
-          delete payload.password;
-        }
-        await updateUser({ id, payload }).unwrap();
-      } else {
-        await createUser(payload).unwrap();
+    const payload = mapPayload(formData);
+    if (id) {
+      if (!updatePassword) {
+        delete payload.password;
       }
-      handlePopupClose();
-    } catch (error) {
-      handleError(error);
+      await updateUser({ id, payload }).unwrap();
+    } else {
+      await createUser(payload).unwrap();
     }
   };
 
@@ -190,15 +185,15 @@ export default function UserFormDialog({ id, removeId, open, setOpen }: UserForm
       </Stack>
 
       <Stack sx={{ mt: 3 }}>
-        {id && data?.data?.createdBy && data?.data?.createdAt && (
+        {id && data?.data?.creatorName && data?.data?.createdAt && (
           <Typography variant="body2">
-            {t('form.created-by')} <b>{data?.data?.createdBy}</b> {t('form.in')}{' '}
+            {t('form.created-by')} <b>{data?.data?.creatorName}</b> {t('form.in')}{' '}
             <b>{fDateTime(data?.data?.createdAt)}</b>
           </Typography>
         )}
-        {id && data?.data?.updatedAt && data?.data?.updatedBy && (
+        {id && data?.data?.updatedAt && data?.data?.updaterName && (
           <Typography variant="body2">
-            {t('form.updated-by')} <b>{data?.data?.updatedBy}</b> {t('form.in')}{' '}
+            {t('form.updated-by')} <b>{data?.data?.updaterName}</b> {t('form.in')}{' '}
             <b>{fDateTime(data?.data?.updatedAt)}</b>
           </Typography>
         )}

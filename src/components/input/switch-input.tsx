@@ -17,7 +17,7 @@ export function SwitchInput({ label, name, required, value, handleInputChange }:
       sx={{ width: 200, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
     >
       {label && (
-        <Typography variant="body2">
+        <Typography variant="caption" sx={{ mb: 1, display: 'block', color: 'text.secondary', fontWeight: 'bold' }}>
           {label}
           {required && (
             <Box component="span" sx={{ color: 'error.main', ml: 0.5 }}>

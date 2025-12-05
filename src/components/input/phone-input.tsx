@@ -21,7 +21,7 @@ const unformatPhoneNumber = (phone: string) =>
 export function PhoneInput({ required, value, error, handleInputChange }: PhoneInputProps) {
   return (
     <Box sx={{ width: '100%' }}>
-      <Typography variant="caption">
+      <Typography variant="caption" sx={{ mb: 1, display: 'block', color: 'text.secondary', fontWeight: 'bold' }}>
         Điện thoại
         {required && (
           <Box component="span" sx={{ color: 'error.main', ml: 0.5 }}>

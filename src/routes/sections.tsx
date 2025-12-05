@@ -16,6 +16,8 @@ import { ROUTES } from './config';
 export const DashboardPage = lazy(() => import('src/pages/dashboard'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
 export const UserPage = lazy(() => import('src/pages/user'));
+export const SongPage = lazy(() => import('src/pages/song'));
+export const ArtistPage = lazy(() => import('src/pages/artist'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
 export const SignUpPage = lazy(() => import('src/pages/sign-up'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
@@ -37,6 +39,8 @@ export const routesSection: RouteObject[] = [
       { path: ROUTES.USER, element: <UserPage /> },
       { path: 'products', element: <ProductsPage /> },
       { path: 'blog', element: <BlogPage /> },
+      { path: 'song', element: <SongPage /> },
+      { path: 'artist', element: <ArtistPage /> },
     ],
   },
   {

@@ -87,20 +87,13 @@ export function SignInView() {
       </Link>
 
       <PasswordInput
-<<<<<<< HEAD
         required
         label="Password"
-=======
-        inpLabel="Password"
->>>>>>> main
         name="password"
         value={formData.password}
         error={formError.password}
         handleInputChange={handleInputChange}
-<<<<<<< HEAD
-=======
         onEnter={handleSignIn}
->>>>>>> main
         sx={{ mb: 3 }}
       />
 

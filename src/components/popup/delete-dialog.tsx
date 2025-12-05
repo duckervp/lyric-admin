@@ -6,34 +6,33 @@ import { handleError } from 'src/utils/notify';
 import { DialogPopup } from './dialog-popup';
 //-------------------------------------------------------------------------
 
-type EditDialogProps = {
-  onPopupClose: () => void;
+type DeleteDialogProps = {
   open: boolean;
+  onPopupClose: () => void;
+  width?: string;
   title: string;
-  width: string;
-  children: React.ReactNode;
-  canSave: boolean;
-  onSave: () => Promise<void>;
-  isSaving?: boolean;
+  children?: React.ReactNode;
+  message?: string;
+  onDelete: () => Promise<void>;
+  isDeleting?: boolean;
 };
 
-export default function EditDialog({
-  onPopupClose,
+export default function DeleteDialog({
   open,
-  title,
+  onPopupClose,
   width,
+  title,
   children,
-  canSave,
-  onSave,
-  isSaving,
-}: EditDialogProps) {
-
-  const handleSaveClick = async () => {
+  message,
+  onDelete,
+  isDeleting,
+}: DeleteDialogProps) {
+  const handleDeleteClick = async () => {
     try {
-      await onSave();        
-      onPopupClose();         
+      await onDelete();
+      onPopupClose();
     } catch (err) {
-      handleError(err);     
+      handleError(err);
     }
   };
 
@@ -42,18 +41,17 @@ export default function EditDialog({
       popupOpen={open}
       onPopupClose={onPopupClose}
       title={title}
-      width={width}
+      width={width || '500px'}
       actions={
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Button
             size="medium"
             color="primary"
             variant="contained"
-            disabled={!canSave}
-            onClick={handleSaveClick}
-            loading={isSaving}
+            onClick={handleDeleteClick}
+            loading={isDeleting}
           >
-            Save
+            Delete
           </Button>
           <Button size="medium" color="inherit" variant="contained" onClick={onPopupClose}>
             Cancel
@@ -61,7 +59,7 @@ export default function EditDialog({
         </Box>
       }
     >
-      {children}
+      {message || children}
     </DialogPopup>
   );
 }

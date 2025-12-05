@@ -5,6 +5,9 @@ import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import { PersistGate } from 'redux-persist/integration/react';
 
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+
 import { usePathname } from 'src/routes/hooks';
 
 import { ThemeProvider } from 'src/theme/theme-provider';
@@ -24,8 +27,11 @@ export default function App({ children }: AppProps) {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <ThemeProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+
           <ToastContainer stacked style={{ marginTop: 60, minHeight: '20px' }} />
           {children}
+          </LocalizationProvider>
         </ThemeProvider>
       </PersistGate>
     </Provider>

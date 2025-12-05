@@ -9,10 +9,8 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import { UserRole } from 'src/utils/type';
-
 import { DashboardContent } from 'src/layouts/dashboard';
-import { useGetAllUsersQuery, useDeleteUserMutation } from 'src/app/api/user/userApiSlice';
+import { useGetAllSongsQuery, useDeleteSongMutation } from 'src/app/api/song/songApiSlice';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -27,43 +25,41 @@ import { TableEmptyRows } from 'src/components/table/table-empty-rows';
 import { CustomTableToolbar } from 'src/components/table/table-toolbar';
 import { emptyRows, applyFilter, getComparator } from 'src/components/table/utils';
 
-import UserFormDialog from '../user-form-dialog';
-
+import SongFormDialog from '../song-form';
 // ----------------------------------------------------------------------
-export type UserProps = {
+export type SongProps = {
   id: number;
-  name: string;
-  role: string;
-  active: string;
-  company: string;
+  title: string;
   imageUrl: string;
-  verified: boolean;
+  artist: string;
+  description: string;
+  releaseAt: string;
 };
 
-export function UserView() {
+export function SongView() {
   const table = useTable();
 
   const [filter, setFilter] = useState({ name: '' });
 
-  const { data: userData, isLoading } = useGetAllUsersQuery({});
+  const { data: userData, isLoading } = useGetAllSongsQuery({});
 
-  const [users, setUsers] = useState<UserProps[]>([]);
+  const [deleteSong] = useDeleteSongMutation();
 
-  const [selectedRow, setSelectedRow] = useState<UserProps>();
+  const [users, setSongs] = useState<SongProps[]>([]);
 
-  const [userFormDialogOpen, setUserFormDialogOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<SongProps>();
+
+  const [userFormDialogOpen, setSongFormDialogOpen] = useState(false);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  const [deleteUser] = useDeleteUserMutation();
-
   useEffect(() => {
     if (userData) {
-      setUsers(userData.data);
+      setSongs(userData.data);
     }
   }, [userData]);
 
-  const dataFiltered: UserProps[] = applyFilter({
+  const dataFiltered: SongProps[] = applyFilter({
     inputData: users,
     comparator: getComparator(table.order, table.orderBy),
     filterName: filter.name,
@@ -71,13 +67,13 @@ export function UserView() {
 
   const notFound = !dataFiltered.length && !!filter.name;
 
-  const handleEditRow = (row: any) => {
+  const handleEditRow = (row: SongProps) => {
     setSelectedRow(row);
-    setUserFormDialogOpen(true);
+    setSongFormDialogOpen(true);
   };
 
   const handleDeleteRow = async () => {
-    await deleteUser(selectedRow?.id);
+    await deleteSong(selectedRow?.id);
   };
 
   if (isLoading) {
@@ -86,11 +82,11 @@ export function UserView() {
 
   return (
     <DashboardContent>
-      <UserFormDialog
+      <SongFormDialog
         id={selectedRow?.id}
         removeId={() => setSelectedRow(undefined)}
         open={userFormDialogOpen}
-        setOpen={setUserFormDialogOpen}
+        setOpen={setSongFormDialogOpen}
       />
       <DeleteDialog
         title="Delete Confirmation"
@@ -98,7 +94,7 @@ export function UserView() {
         onPopupClose={() => setDeleteDialogOpen(false)}
         children={
           <Typography variant="body2">
-            Are you sure to delete <b>{selectedRow?.name}</b> user?
+            Are you sure to delete <b>{selectedRow?.title}</b> song?
           </Typography>
         }
         onDelete={handleDeleteRow}
@@ -110,16 +106,19 @@ export function UserView() {
           alignItems: 'center',
         }}
       >
-        <Typography variant="h4" sx={{ flexGrow: 1 }}>
-          Users
-        </Typography>
+        <Box sx={{ flexGrow: 1 }}>
+          <Typography variant="h4">Songs</Typography>
+          <Typography variant="body2" color="text.secondary">
+            Manage songs
+          </Typography>
+        </Box>
         <Button
           variant="contained"
           color="inherit"
           startIcon={<Iconify icon="mingcute:add-line" />}
-          onClick={() => setUserFormDialogOpen(true)}
+          onClick={() => setSongFormDialogOpen(true)}
         >
-          New user
+          New song
         </Button>
       </Box>
 
@@ -149,11 +148,10 @@ export function UserView() {
                   )
                 }
                 headLabel={[
-                  { id: 'name', label: 'Name' },
-                  { id: 'email', label: 'Email' },
-                  { id: 'role', label: 'Role' },
-                  { id: 'verified', label: 'Verified', align: 'center' },
-                  { id: 'active', label: 'Status' },
+                  { id: 'title', label: 'Title' },
+                  { id: 'artist', label: 'Artist' },
+                  { id: 'description', label: 'Description' },
+                  { id: 'releaseAt', label: 'Release', align: 'right' },
                   { id: '' },
                 ]}
               />
@@ -176,49 +174,21 @@ export function UserView() {
                       onSelectRow={() => table.onSelectRow(row.id.toString())}
                       config={[
                         {
-                          field: 'name',
+                          field: 'title',
                           render: () => (
                             <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
                               <img
                                 src={row.imageUrl || '/assets/images/avatar/avatar-25.webp'}
-                                alt={row.name}
+                                alt={row.title}
                                 style={{ width: 40, height: 40, borderRadius: '50%' }}
                               />
-                              {row.name}
+                              {row.title}
                             </Box>
                           ),
                         },
-                        { field: 'email' },
-                        {
-                          field: 'role',
-                          render: () => (
-                            <Label color={(row.role === UserRole.USER && 'info') || 'secondary'}>
-                              {row.role}
-                            </Label>
-                          ),
-                        },
-                        {
-                          field: 'verified',
-                          align: 'center',
-                          render: () =>
-                            row.verified ? (
-                              <Iconify
-                                width={22}
-                                icon="solar:check-circle-bold"
-                                sx={{ color: 'success.main' }}
-                              />
-                            ) : (
-                              '-'
-                            ),
-                        },
-                        {
-                          field: 'active',
-                          render: () => (
-                            <Label color={(row.active && 'success') || 'error'}>
-                              {row.active ? 'active' : 'inactive'}
-                            </Label>
-                          ),
-                        },
+                        { field: 'artist' },
+                        { field: 'description' },
+                        { field: 'releaseAt', align: 'right' },
                       ]}
                     />
                   ))}

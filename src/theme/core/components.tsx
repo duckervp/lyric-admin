@@ -63,11 +63,11 @@ const MuiOutlinedInput: Components<Theme>['MuiOutlinedInput'] = {
   defaultProps: {
     size: 'small',
   },
-  styleOverrides: {
-    notchedOutline: ({ theme }) => ({
-      borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.2),
-    }),
-  },
+  // styleOverrides: {
+  //   notchedOutline: ({ theme }) => ({
+  //     borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.2),
+  //   }),
+  // },
 };
 
 const MuiPaper: Components<Theme>['MuiPaper'] = {

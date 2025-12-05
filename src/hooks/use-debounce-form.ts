@@ -87,7 +87,7 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
 
     const value = type === 'checkbox' ? checked : val;
 
-    if (['text', 'password', 'number', 'email', 'gender', 'store-select'].includes(type)) {
+    if (['text', 'password', 'number', 'email', 'gender', 'store-select', 'custom'].includes(type)) {
       setInputValue({ name, value });
 
       setFormError((prevError) => ({ ...prevError, [name]: '' }));
@@ -105,16 +105,16 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
   }, []);
 
   const isValidForm = () => {
-    console.log("requiredF", form.requiredFields);
-    
+    // console.log("requiredF", form.requiredFields);
+
     const allFilled = form.requiredFields.every((field) => formDataRef.current[field]);
-    console.log("allFilled", allFilled);
+    // console.log("allFilled", allFilled);
 
     const noErrors = Object.values(formError).every((val) => !val);
-    console.log("noErrors", noErrors);
+    // console.log("noErrors", noErrors);
 
     const noDebouncePending = debouncedFields.size === 0;
-    console.log("noDebouncePending", noDebouncePending);
+    // console.log("noDebouncePending", noDebouncePending);
 
     return allFilled && noErrors && noDebouncePending && !shallowEqual(form.initialState, formDataRef.current);
   };

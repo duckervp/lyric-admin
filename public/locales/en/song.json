@@ -1,0 +1,23 @@
+{
+  "song-form-dialog": {
+    "new-title": "New Song",
+    "edit-title": "Edit Song",
+    "form": {
+      "title": "Title",
+      "slug": "Slug (URL)",
+      "artist": "Main Artist",
+      "description": "Description",
+      "lyric": "Lyrics",
+      "release": "Release Date",
+      "password": "Password",
+      "change-password": "Change password",
+      "new-password": "New password",
+      "confirm-password": "Confirm password",
+      "created-by": "Created by",
+      "updated-by": "Updated by",
+      "created-at": "Created at",
+      "updated-at": "Updated at",
+      "in": "in"
+    }
+  }
+}

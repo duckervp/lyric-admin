@@ -26,7 +26,10 @@ export function DateInput({
   return (
     <Box sx={{ width: '100%' }}>
       {label && (
-        <Typography variant="caption">
+        <Typography
+          variant="caption"
+          sx={{ mb: 1, display: 'block', color: 'text.secondary', fontWeight: 'bold' }}
+        >
           {label}
           {required && (
             <Box component="span" sx={{ color: 'error.main', ml: 0.5 }}>
@@ -38,7 +41,7 @@ export function DateInput({
       <DatePicker
         value={value ? dayjs(value) : null}
         format="DD/MM/YYYY"
-        slotProps={{ textField: { fullWidth: true } }}
+        slotProps={{ textField: { fullWidth: true, size: 'small' } }}
         onChange={(date: any) => {
           handleInputChange({
             target: {
@@ -49,7 +52,7 @@ export function DateInput({
           } as React.ChangeEvent<HTMLInputElement>);
         }}
       />
-      {!!error  && (
+      {!!error && (
         <Typography variant="caption" color="error" sx={{ ml: 2 }}>
           {error}
         </Typography>

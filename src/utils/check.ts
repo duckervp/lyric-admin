@@ -1,8 +1,4 @@
 export function shallowEqual(obj1: any, obj2: any): boolean {
-    console.log("1", obj1);
-    
-    console.log("2", obj2);
-    
     const keys1 = Object.keys(obj1);
     const keys2 = Object.keys(obj2);
 

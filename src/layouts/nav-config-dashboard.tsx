@@ -39,6 +39,16 @@ export const navData = [
     icon: icon('ic-blog'),
   },
   {
+    title: 'Song',
+    path: '/song',
+    icon: icon('ic-blog'),
+  },
+  {
+    title: 'Artist',
+    path: '/artist',
+    icon: icon('ic-user'),
+  },
+  {
     title: 'Sign in',
     path: '/sign-in',
     icon: icon('ic-lock'),

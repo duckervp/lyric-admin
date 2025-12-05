@@ -26,8 +26,8 @@ type CustomTableRowProps = {
   config: RowConfigs;
   selected: boolean;
   onSelectRow: () => void;
-  onEditRow: (id: number) => void;
-  onDeleteRow: (id: number) => void;
+  onEditRow: () => void;
+  onDeleteRow: () => void;
 };
 
 export function CustomTableRow({
@@ -48,13 +48,13 @@ export function CustomTableRow({
     setOpenPopover(null);
   }, []);
 
-  const handleEditRow = (id: number) => {
-    onEditRow(id);
+  const handleEditRow = () => {
+    onEditRow();
     handleClosePopover();
   };
 
-  const handleDeleteRow = (id: number) => {
-    onDeleteRow(id);
+  const handleDeleteRow = () => {
+    onDeleteRow();
     handleClosePopover();
   };
 
@@ -131,12 +131,12 @@ export function CustomTableRow({
             },
           }}
         >
-          <MenuItem onClick={() => handleEditRow(row.id)}>
+          <MenuItem onClick={handleEditRow}>
             <Iconify icon="solar:pen-bold" />
             Edit
           </MenuItem>
 
-          <MenuItem onClick={() => handleDeleteRow(row.id)} sx={{ color: 'error.main' }}>
+          <MenuItem onClick={handleDeleteRow} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete
           </MenuItem>
