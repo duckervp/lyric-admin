@@ -1,5 +1,10 @@
 {
-  "song-form-dialog": {
+  "list-view": {
+    "title": "Songs",
+    "des": "Manage songs",
+    "creationBtnText": "New song"
+  },
+  "form-dialog": {
     "new-title": "New Song",
     "edit-title": "Edit Song",
     "form": {

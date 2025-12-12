@@ -82,15 +82,15 @@ const SongArtistList: React.FC<SongArtistListProps> = ({ artists, songArtists, o
         {songArtists.map((artist, index) => (
           <Paper
             key={index}
-            variant="outlined"
-            sx={{ p: 2, bgcolor: 'background.paper', transition: 'all 0.3s' }}
+            // variant="outlined"
+            sx={{ p: 1, bgcolor: 'background.paper', transition: 'all 0.3s' }}
           >
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center">
               <Box sx={{ flex: 1, width: '100%', position: 'relative' }}>
                 <ArtistSelectInput
                   required
                   name="artist"
-                   value={artist.id || ''}
+                   value={artist.artistId || ''}
                   //  error={formError.artist}
                   options={artists}
                   placeholder="Artist ID"

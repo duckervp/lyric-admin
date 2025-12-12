@@ -13,6 +13,7 @@ type DateInputProps = {
   value: string;
   error: string;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  format?: string;
 };
 
 export function DateInput({
@@ -22,6 +23,7 @@ export function DateInput({
   value,
   error,
   handleInputChange,
+  format,
 }: DateInputProps) {
   return (
     <Box sx={{ width: '100%' }}>
@@ -40,7 +42,7 @@ export function DateInput({
       )}
       <DatePicker
         value={value ? dayjs(value) : null}
-        format="DD/MM/YYYY"
+        format={format || 'DD/MM/YYYY'}
         slotProps={{ textField: { fullWidth: true, size: 'small' } }}
         onChange={(date: any) => {
           handleInputChange({
@@ -51,6 +53,8 @@ export function DateInput({
             },
           } as React.ChangeEvent<HTMLInputElement>);
         }}
+        views={format === 'YYYY' ? ['year'] : undefined}
+        yearsOrder="desc"
       />
       {!!error && (
         <Typography variant="caption" color="error" sx={{ ml: 2 }}>

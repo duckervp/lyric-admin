@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -6,16 +7,21 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { Iconify } from 'src/components/iconify';
-
 // ----------------------------------------------------------------------
 
 type CustomTableToolbarProps = {
   numSelected: number;
   filterName: string;
   onFilterName: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onDelete?: () => void;
 };
 
-export function CustomTableToolbar({ numSelected, filterName, onFilterName }: CustomTableToolbarProps) {
+export function CustomTableToolbar({
+  numSelected,
+  filterName,
+  onFilterName,
+  onDelete
+}: CustomTableToolbarProps) {
   return (
     <Toolbar
       sx={{
@@ -49,17 +55,18 @@ export function CustomTableToolbar({ numSelected, filterName, onFilterName }: Cu
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
+        <Tooltip title="Delete" onClick={onDelete}>
           <IconButton>
             <Iconify icon="solar:trash-bin-trash-bold" />
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <Iconify icon="ic:round-filter-list" />
-          </IconButton>
-        </Tooltip>
+        <Box />
+        // <Tooltip title="Filter list">
+        //   <IconButton>
+        //     <Iconify icon="ic:round-filter-list" />
+        //   </IconButton>
+        // </Tooltip>
       )}
     </Toolbar>
   );

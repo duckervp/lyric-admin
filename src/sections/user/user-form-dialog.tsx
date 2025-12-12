@@ -55,7 +55,7 @@ const mapPayload = (formData: any) => ({
 });
 
 export default function UserFormDialog({ id, removeId, open, setOpen }: UserFormDialogProps) {
-  const { t } = useTranslation('user', { keyPrefix: 'user-form-dialog' });
+  const { t } = useTranslation('user', { keyPrefix: 'form-dialog' });
 
   const { data, isLoading } = useGetUserByIdQuery(id, { skip: !id });
   const [createUser] = useCreateUserMutation();

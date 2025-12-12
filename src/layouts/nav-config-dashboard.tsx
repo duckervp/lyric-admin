@@ -24,21 +24,6 @@ export const navData = [
     icon: icon('ic-user'),
   },
   {
-    title: 'Product',
-    path: '/products',
-    icon: icon('ic-cart'),
-    info: (
-      <Label color="error" variant="inverted">
-        +3
-      </Label>
-    ),
-  },
-  {
-    title: 'Blog',
-    path: '/blog',
-    icon: icon('ic-blog'),
-  },
-  {
     title: 'Song',
     path: '/song',
     icon: icon('ic-blog'),
@@ -47,15 +32,5 @@ export const navData = [
     title: 'Artist',
     path: '/artist',
     icon: icon('ic-user'),
-  },
-  {
-    title: 'Sign in',
-    path: '/sign-in',
-    icon: icon('ic-lock'),
-  },
-  {
-    title: 'Not found',
-    path: '/404',
-    icon: icon('ic-disabled'),
   },
 ];

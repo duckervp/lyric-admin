@@ -12,7 +12,7 @@ import { Logo } from 'src/components/logo';
 export function NotFoundView() {
   return (
     <>
-      <Logo sx={{ position: 'fixed', top: 20, left: 20 }} />
+      <Logo isSingle sx={{ position: 'fixed', top: 20, left: 20 }} />
 
       <Container
         sx={{

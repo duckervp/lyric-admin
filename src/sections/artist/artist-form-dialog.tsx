@@ -49,7 +49,7 @@ const mapPayload = (formData: any) => ({
 });
 
 export default function ArtistFormDialog({ id, removeId, open, setOpen }: ArtistFormDialogProps) {
-  const { t } = useTranslation('artist', { keyPrefix: 'artist-form-dialog' });
+  const { t } = useTranslation('artist', { keyPrefix: 'form-dialog' });
 
   const { data, isLoading } = useGetArtistByIdQuery(id, { skip: !id });
   const [createArtist] = useCreateArtistMutation();

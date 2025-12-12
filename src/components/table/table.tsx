@@ -73,7 +73,7 @@ export function DTable({
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
-                  data?.map((row) => '' + row.id)
+                  data?.map((row) => row.id)
                 )
               }
               headLabel={headerConfigs}
@@ -83,8 +83,8 @@ export function DTable({
                 <CustomTableRow
                   key={row.id}
                   row={row}
-                  selected={table.selected.includes('' + row.id)}
-                  onSelectRow={() => table.onSelectRow('' + row.id)}
+                  selected={table.selected.includes(row.id)}
+                  onSelectRow={() => table.onSelectRow(row.id)}
                   config={rowConfigs}
                   onEditRow={onEditRow}
                   onDeleteRow={onDeleteRow}
@@ -103,14 +103,14 @@ export function DTable({
       </Scrollbar>
 
       <TablePagination
-          component="div"
-          page={table.page}
-          count={data.length}
-          rowsPerPage={table.rowsPerPage}
-          onPageChange={table.onChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
-          onRowsPerPageChange={table.onChangeRowsPerPage}
-        />
+        component="div"
+        page={table.page}
+        count={data.length}
+        rowsPerPage={table.rowsPerPage}
+        onPageChange={table.onChangePage}
+        rowsPerPageOptions={[5, 10, 25]}
+        onRowsPerPageChange={table.onChangeRowsPerPage}
+      />
     </Card>
   );
 }

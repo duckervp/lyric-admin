@@ -1,5 +1,10 @@
 {
-  "artist-form-dialog": {
+  "list-view": {
+    "title": "Artists",
+    "des": "Manage artists",
+    "creationBtnText": "New artist"
+  },
+  "form-dialog": {
     "new-title": "New Artist",
     "edit-title": "Edit Artist",
     "form": {

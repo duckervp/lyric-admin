@@ -30,10 +30,10 @@ export function ArtistSelectInput({
   name,
   placeholder,
 }: ArtistSelectInputProps) {
-  const [selected, setSelected] = useState<any>(null);
+  const [selected, setSelected] = useState<any>(options?.filter((item) => item.id == value).at(0));
 
   useEffect(() => {
-    const option = options?.filter((item) => item.id === value).at(0);
+    const option = options?.filter((item) => item.id == value).at(0);
     if (option) {
       setSelected(option);
     }

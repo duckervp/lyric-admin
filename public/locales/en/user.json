@@ -1,5 +1,10 @@
 {
-  "user-form-dialog": {
+  "list-view": {
+    "title": "Users",
+    "des": "Manage users",
+    "creationBtnText": "New user"
+  },
+  "form-dialog": {
     "new-title": "New User",
     "edit-title": "Edit User",
     "form": {
