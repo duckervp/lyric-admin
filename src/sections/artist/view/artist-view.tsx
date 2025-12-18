@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { ArtistRole } from 'src/utils/type';
 
-import { useGetAllArtistsQuery, useDeleteArtistMutation } from 'src/app/api/artist/artistApiSlice';
+import {
+  useGetAllArtistsQuery,
+  useDeleteArtistMutation,
+  useDeleteArtistsMutation,
+} from 'src/app/api/artist/artistApiSlice';
 
 import { Label } from 'src/components/label';
 import Fallback from 'src/components/loading/fallback';
@@ -23,11 +27,13 @@ export type ArtistProps = {
 };
 
 export function ArtistView() {
-  const { t } = useTranslation('artist', { keyPrefix: 'list-view' });
+  const { t } = useTranslation('artist', { keyPrefix: 'listView' });
 
   const { data: artistData, isLoading } = useGetAllArtistsQuery({});
 
   const [deleteArtist] = useDeleteArtistMutation();
+
+  const [deleteArtists] = useDeleteArtistsMutation();
 
   const [artists, setArtists] = useState<ArtistProps[]>([]);
 
@@ -39,6 +45,10 @@ export function ArtistView() {
 
   const handleDeleteRow = async (rowId: number) => {
     await deleteArtist(rowId);
+  };
+
+  const handleDeleteRows = async (rowIds: number[]) => {
+    await deleteArtists(rowIds);
   };
 
   if (isLoading) {
@@ -53,10 +63,11 @@ export function ArtistView() {
       data={artists}
       searchField="name"
       onDeleteRow={handleDeleteRow}
+      onBatchDeleteRows={handleDeleteRows}
       headLabel={[
-        { id: 'name', label: 'Name' },
-        { id: 'role', label: 'Role' },
-        { id: 'bio', label: 'Bio' },
+        { id: 'name', label: t('columns.name') },
+        { id: 'role', label: t('columns.role') },
+        { id: 'bio', label: t('columns.bio') },
         { id: '' },
       ]}
       rowConfigMap={(row: any) => [
@@ -83,7 +94,7 @@ export function ArtistView() {
                 'error'
               }
             >
-              {row.role === ArtistRole.SINGER_COMPOSER ? 'Singer & Composer' : row.role}
+              {t('artistRole.' + row.role)}
             </Label>
           ),
         },
@@ -91,8 +102,22 @@ export function ArtistView() {
       ]}
       renderDeleteDialogContent={(rowData: any) => (
         <Typography variant="body2">
-          Are you sure to delete <b>{rowData?.name}</b> artist?
+          <Trans
+            i18nKey="listView.deleteDialogContent"
+            ns="artist"
+            values={{ name: rowData?.name }}
+            components={{ b: <b /> }}
+          />
         </Typography>
+      )}
+      renderBatchDeleteDialogContent={(selected: number[]) => (
+        <Trans
+          i18nKey="listView.batchDeleteDialogContent"
+          ns="artist"
+          values={{ selected: selected.length }}
+          count={selected.length}
+          components={{ b: <b /> }}
+        />
       )}
       renderFormDialog={(
         selectedRowId: number,

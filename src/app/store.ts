@@ -12,6 +12,7 @@ import {
 } from 'redux-persist'
 
 import authReducer from "./api/auth/authSlice";
+import langReducer from "./api/lang/langSlice";
 import { apiSlice, noAuthApiSlice } from "./api/apiSlice";
 
 const authPersistConfig = {
@@ -20,10 +21,16 @@ const authPersistConfig = {
   blacklist: ['accessToken']
 }
 
+const langPersistConfig = {
+  key: 'lang',
+  storage
+}
+
 const rootReducer = combineReducers({
   [apiSlice.reducerPath]: apiSlice.reducer,
   [noAuthApiSlice.reducerPath]: noAuthApiSlice.reducer,
   auth: persistReducer(authPersistConfig, authReducer),
+  lang: persistReducer(langPersistConfig, langReducer)
 });
 
 export const store = configureStore({

@@ -1,6 +1,7 @@
 import type { Artist, SongArtist } from 'src/utils/type';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -25,6 +26,8 @@ interface SongArtistListProps {
 }
 
 const SongArtistList: React.FC<SongArtistListProps> = ({ artists, songArtists, onChange }) => {
+  const { t } = useTranslation('song', { keyPrefix: 'artistList' });
+
   const addArtist = () => {
     const newArtist: SongArtist = {
       songId: 0,
@@ -50,7 +53,7 @@ const SongArtistList: React.FC<SongArtistListProps> = ({ artists, songArtists, o
     <Box>
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
         <Typography variant="subtitle2" color="text.secondary">
-          Credits & Contributors
+          {t('title')}
         </Typography>
         <Button
           size="small"
@@ -58,7 +61,7 @@ const SongArtistList: React.FC<SongArtistListProps> = ({ artists, songArtists, o
           onClick={addArtist}
           sx={{ textTransform: 'none' }}
         >
-          Add Artist
+          {t('creationBtnText')}
         </Button>
       </Box>
 
@@ -74,7 +77,7 @@ const SongArtistList: React.FC<SongArtistListProps> = ({ artists, songArtists, o
             fontSize: '0.875rem',
           }}
         >
-          No songArtists linked yet. Add contributors like singers or composers.
+          {t('emptyListMessage')}
         </Paper>
       )}
 
@@ -90,11 +93,13 @@ const SongArtistList: React.FC<SongArtistListProps> = ({ artists, songArtists, o
                 <ArtistSelectInput
                   required
                   name="artist"
-                   value={artist.artistId || ''}
+                  value={artist.artistId || ''}
                   //  error={formError.artist}
                   options={artists}
-                  placeholder="Artist ID"
-                  handleInputChange={(e) => updateArtist(index, 'artistId', parseInt(e.target.value) || 0)}
+                  placeholder={t('artist')}
+                  handleInputChange={(e) =>
+                    updateArtist(index, 'artistId', parseInt(e.target.value) || 0)
+                  }
                   //  handleInputChange={handleInputChange}
                 />
               </Box>
@@ -106,9 +111,11 @@ const SongArtistList: React.FC<SongArtistListProps> = ({ artists, songArtists, o
                     onChange={(e) => updateArtist(index, 'role', e.target.value as ArtistRole)}
                     displayEmpty
                   >
-                    <MenuItem value={ArtistRole.SINGER}>Singer</MenuItem>
-                    <MenuItem value={ArtistRole.COMPOSER}>Composer</MenuItem>
-                    <MenuItem value={ArtistRole.SINGER_COMPOSER}>Singer & Composer</MenuItem>
+                    {Object.values(ArtistRole).map((role) => (
+                      <MenuItem key={role} value={role}>
+                        {t('artistRole.' + role)}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Box>

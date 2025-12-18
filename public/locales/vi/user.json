@@ -1,0 +1,41 @@
+{
+  "listView": {
+    "title": "Người dùng",
+    "des": "Quản lý người dùng",
+    "creationBtnText": "Thêm người dùng",
+    "columns": {
+      "name": "Tên",
+      "email": "Email",
+      "role": "Vai trò",
+      "verified": "Xác thực",
+      "active": "Trạng thái"
+    },
+    "status": {
+      "active": "Hoạt động",
+      "inactive": "Không hoạt động"
+    },
+    "deleteDialogContent": "Bạn có chắc chắn muốn xóa người dùng <b>{{name}}</b> không?",
+    "batchDeleteDialogContent_one": "Bạn có chắc chắn muốn xóa người dùng đã chọn không?",
+    "batchDeleteDialogContent_other": "Bạn có chắc chắn muốn xóa <b>{{selected}}</b> người dùng đã chọn không?"
+  },
+  "formDialog": {
+    "newTitle": "Thêm người dùng",
+    "editTitle": "Chỉnh sửa người dùng",
+    "form": {
+      "name": "Tên",
+      "email": "Email",
+      "active": "Hoạt động",
+      "role": "Quản trị viên",
+      "verified": "Đã xác thực",
+      "password": "Mật khẩu",
+      "changePassword": "Đổi mật khẩu",
+      "newPassword": "Mật khẩu mới",
+      "confirmPassword": "Xác nhận mật khẩu",
+      "createdBy": "Tạo bởi",
+      "updatedBy": "Cập nhật bởi",
+      "createdAt": "Ngày tạo",
+      "updatedAt": "Ngày cập nhật",
+      "in": "trong"
+    }
+  }
+}

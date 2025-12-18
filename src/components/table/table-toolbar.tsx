@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 import Toolbar from '@mui/material/Toolbar';
@@ -22,6 +24,8 @@ export function CustomTableToolbar({
   onFilterName,
   onDelete
 }: CustomTableToolbarProps) {
+  const { t } = useTranslation('common', { keyPrefix: 'table.toolbar' });
+
   return (
     <Toolbar
       sx={{
@@ -37,14 +41,14 @@ export function CustomTableToolbar({
     >
       {numSelected > 0 ? (
         <Typography component="div" variant="subtitle1">
-          {numSelected} selected
+          {numSelected} {t('selected')}
         </Typography>
       ) : (
         <OutlinedInput
           fullWidth
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search ..."
+          placeholder={t('searchInputPlaceHolder')}
           startAdornment={
             <InputAdornment position="start">
               <Iconify width={20} icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
@@ -55,7 +59,7 @@ export function CustomTableToolbar({
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete" onClick={onDelete}>
+        <Tooltip title={t('deleteTooltip')} onClick={onDelete}>
           <IconButton>
             <Iconify icon="solar:trash-bin-trash-bold" />
           </IconButton>

@@ -14,4 +14,6 @@ export const ROUTES = {
   SETTINGS: '/settings',
   NOT_FOUND: '/404',
   USER: '/user',
+  SONG: '/song',
+  ARTIST: '/artist',
 }

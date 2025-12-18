@@ -49,7 +49,7 @@ const mapPayload = (formData: any) => ({
 });
 
 export default function ArtistFormDialog({ id, removeId, open, setOpen }: ArtistFormDialogProps) {
-  const { t } = useTranslation('artist', { keyPrefix: 'form-dialog' });
+  const { t } = useTranslation('artist', { keyPrefix: 'formDialog' });
 
   const { data, isLoading } = useGetArtistByIdQuery(id, { skip: !id });
   const [createArtist] = useCreateArtistMutation();
@@ -58,7 +58,6 @@ export default function ArtistFormDialog({ id, removeId, open, setOpen }: Artist
   const initialState = useMemo(() => {
     if (id && data?.data) {
       const artist = data.data;
-      console.log("fetch", artist);
       return {
         name: artist.name || '',
         role: artist.role || '',
@@ -110,7 +109,7 @@ export default function ArtistFormDialog({ id, removeId, open, setOpen }: Artist
       canSave={isValidForm()}
       onSave={handleSave}
       onPopupClose={handlePopupClose}
-      title={id ? t('edit-title') : t('new-title')}
+      title={id ? t('editTitle') : t('newTitle')}
       width="600px"
     >
       <Stack spacing={3}>
@@ -129,14 +128,14 @@ export default function ArtistFormDialog({ id, removeId, open, setOpen }: Artist
           value={formData.role}
           handleInputChange={handleInputChange}
           items={[
-            { value: 'singer', label: 'Singer' },
-            { value: 'composer', label: 'Composer' },
-            { value: 'singer_composer', label: 'Singer & Composer' },
+            { value: 'singer', label: t('form.artistRole.singer') },
+            { value: 'composer', label: t('form.artistRole.composer') },
+            { value: 'singer_composer', label: t('form.artistRole.singer_composer') },
           ]}
         />
 
         <TextField
-          label="Biography"
+          label={t('form.bio')}
           name="bio"
           value={formData.bio}
           onChange={handleInputChange}
@@ -149,13 +148,13 @@ export default function ArtistFormDialog({ id, removeId, open, setOpen }: Artist
       <Stack sx={{ mt: 3 }}>
         {id && data?.data?.creatorName && data?.data?.createdAt && (
           <Typography variant="body2">
-            {t('form.created-by')} <b>{data?.data?.creatorName}</b> {t('form.in')}{' '}
+            {t('form.createdBy')} <b>{data?.data?.creatorName}</b> {t('form.on')}{' '}
             <b>{fDateTime(data?.data?.createdAt)}</b>
           </Typography>
         )}
         {id && data?.data?.updatedAt && data?.data?.updaterName && (
           <Typography variant="body2">
-            {t('form.updated-by')} <b>{data?.data?.updaterName}</b> {t('form.in')}{' '}
+            {t('form.updatedBy')} <b>{data?.data?.updaterName}</b> {t('form.on')}{' '}
             <b>{fDateTime(data?.data?.updatedAt)}</b>
           </Typography>
         )}

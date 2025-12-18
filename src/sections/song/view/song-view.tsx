@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { fDateTime, formatPatterns } from 'src/utils/format-time';
 
-import { useGetAllSongsQuery, useDeleteSongMutation } from 'src/app/api/song/songApiSlice';
+import {
+  useGetAllSongsQuery,
+  useDeleteSongMutation,
+  useDeleteSongsMutation,
+} from 'src/app/api/song/songApiSlice';
 
 import Fallback from 'src/components/loading/fallback';
 import { TableView } from 'src/components/table/table-view';
@@ -25,11 +29,13 @@ export type SongProps = {
 };
 
 export function SongView() {
-  const { t } = useTranslation('song', { keyPrefix: 'list-view' });
+  const { t } = useTranslation('song', { keyPrefix: 'listView' });
 
   const { data: songData, isLoading } = useGetAllSongsQuery({});
 
   const [deleteSong] = useDeleteSongMutation();
+
+  const [deleteSongs] = useDeleteSongsMutation();
 
   const [songs, setSongs] = useState<SongProps[]>([]);
 
@@ -41,6 +47,10 @@ export function SongView() {
 
   const handleDeleteRow = async (rowId: number) => {
     await deleteSong(rowId);
+  };
+
+  const handleDeleteRows = async (rowIds: number[]) => {
+    await deleteSongs(rowIds);
   };
 
   if (isLoading) {
@@ -55,11 +65,12 @@ export function SongView() {
       data={songs}
       searchField="title"
       onDeleteRow={handleDeleteRow}
+      onBatchDeleteRows={handleDeleteRows}
       headLabel={[
-        { id: 'title', label: 'Title' },
-        { id: 'mainArtistName', label: 'Artist' },
-        { id: 'description', label: 'Description' },
-        { id: 'releaseAt', label: 'Release', align: 'right' },
+        { id: 'title', label: t('columns.title') },
+        { id: 'mainArtistName', label: t('columns.artist') },
+        { id: 'description', label: t('columns.description') },
+        { id: 'releaseAt', label: t('columns.release'), align: 'right' },
         { id: '' },
       ]}
       rowConfigMap={(row: any) => [
@@ -88,7 +99,23 @@ export function SongView() {
       ]}
       renderDeleteDialogContent={(rowData: any) => (
         <Typography variant="body2">
-          Are you sure to delete <b>{rowData?.title}</b> song?
+          <Trans
+            i18nKey="listView.deleteDialogContent"
+            ns="song"
+            values={{ name: rowData?.name }}
+            components={{ b: <b /> }}
+          />
+        </Typography>
+      )}
+      renderBatchDeleteDialogContent={(selected: number[]) => (
+        <Typography variant="body2">
+          <Trans
+            i18nKey="listView.batchDeleteDialogContent"
+            ns="song"
+            values={{ selected: selected.length }}
+            count={selected.length}
+            components={{ b: <b /> }}
+          />
         </Typography>
       )}
       renderFormDialog={(

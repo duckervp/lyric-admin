@@ -55,7 +55,7 @@ const mapPayload = (formData: any) => ({
 });
 
 export default function UserFormDialog({ id, removeId, open, setOpen }: UserFormDialogProps) {
-  const { t } = useTranslation('user', { keyPrefix: 'form-dialog' });
+  const { t } = useTranslation('user', { keyPrefix: 'formDialog' });
 
   const { data, isLoading } = useGetUserByIdQuery(id, { skip: !id });
   const [createUser] = useCreateUserMutation();
@@ -118,7 +118,7 @@ export default function UserFormDialog({ id, removeId, open, setOpen }: UserForm
       canSave={isValidForm()}
       onSave={handleSave}
       onPopupClose={handlePopupClose}
-      title={id ? t('edit-title') : t('new-title')}
+      title={id ? t('editTitle') : t('newTitle')}
       width="800px"
     >
       <Stack spacing={3}>
@@ -165,7 +165,7 @@ export default function UserFormDialog({ id, removeId, open, setOpen }: UserForm
         <Stack spacing={3}>
           {id && (
             <SwitchInput
-              label={t('form.change-password')}
+              label={t('form.changePassword')}
               name="updatePassword"
               value={updatePassword}
               handleInputChange={(e) => setUpdatePassword(e.target.checked)}
@@ -187,13 +187,13 @@ export default function UserFormDialog({ id, removeId, open, setOpen }: UserForm
       <Stack sx={{ mt: 3 }}>
         {id && data?.data?.creatorName && data?.data?.createdAt && (
           <Typography variant="body2">
-            {t('form.created-by')} <b>{data?.data?.creatorName}</b> {t('form.in')}{' '}
+            {t('form.createdBy')} <b>{data?.data?.creatorName}</b> {t('form.on')}{' '}
             <b>{fDateTime(data?.data?.createdAt)}</b>
           </Typography>
         )}
         {id && data?.data?.updatedAt && data?.data?.updaterName && (
           <Typography variant="body2">
-            {t('form.updated-by')} <b>{data?.data?.updaterName}</b> {t('form.in')}{' '}
+            {t('form.updatedBy')} <b>{data?.data?.updaterName}</b> {t('form.on')}{' '}
             <b>{fDateTime(data?.data?.updatedAt)}</b>
           </Typography>
         )}

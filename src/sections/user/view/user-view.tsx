@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { UserRole } from 'src/utils/type';
 
-import { useGetAllUsersQuery, useDeleteUserMutation, useDeleteUsersMutation } from 'src/app/api/user/userApiSlice';
+import {
+  useGetAllUsersQuery,
+  useDeleteUserMutation,
+  useDeleteUsersMutation,
+} from 'src/app/api/user/userApiSlice';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -27,14 +31,14 @@ export type UserProps = {
 };
 
 export function UserView() {
-  const { t } = useTranslation('user', { keyPrefix: 'list-view' });
+  const { t } = useTranslation('user', { keyPrefix: 'listView' });
 
   const { data: userData, isLoading } = useGetAllUsersQuery({});
 
   const [users, setUsers] = useState<UserProps[]>([]);
 
   const [deleteUser] = useDeleteUserMutation();
-  
+
   const [deleteUsers] = useDeleteUsersMutation();
 
   useEffect(() => {
@@ -48,8 +52,6 @@ export function UserView() {
   };
 
   const handleDeleteRows = async (rowIds: number[]) => {
-    console.log("batch", rowIds);
-    
     await deleteUsers(rowIds);
   };
 
@@ -67,11 +69,11 @@ export function UserView() {
       onDeleteRow={handleDeleteRow}
       onBatchDeleteRows={handleDeleteRows}
       headLabel={[
-        { id: 'name', label: 'Name' },
-        { id: 'email', label: 'Email' },
-        { id: 'role', label: 'Role' },
-        { id: 'verified', label: 'Verified', align: 'center' },
-        { id: 'active', label: 'Status' },
+        { id: 'name', label: t('columns.name') },
+        { id: 'email', label: t('columns.email') },
+        { id: 'role', label: t('columns.role') },
+        { id: 'verified', label: t('columns.verified'), align: 'center' },
+        { id: 'active', label: t('columns.active') },
         { id: '' },
       ]}
       rowConfigMap={(row: any) => [
@@ -109,14 +111,30 @@ export function UserView() {
           field: 'active',
           render: () => (
             <Label color={(row.active && 'success') || 'error'}>
-              {row.active ? 'active' : 'inactive'}
+              {row.active ? t('status.active') : t('status.inactive')}
             </Label>
           ),
         },
       ]}
       renderDeleteDialogContent={(rowData: any) => (
         <Typography variant="body2">
-          Are you sure to delete <b>{rowData?.name}</b> user?
+          <Trans
+            i18nKey="listView.deleteDialogContent"
+            ns="user"
+            values={{ name: rowData?.name }}
+            components={{ b: <b /> }}
+          />
+        </Typography>
+      )}
+      renderBatchDeleteDialogContent={(selected: number[]) => (
+        <Typography variant="body2">
+          <Trans
+            i18nKey="listView.batchDeleteDialogContent"
+            ns="user"
+            values={{ selected: selected.length }}
+            count={selected.length}
+            components={{ b: <b /> }}
+          />
         </Typography>
       )}
       renderFormDialog={(

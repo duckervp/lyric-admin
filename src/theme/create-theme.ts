@@ -31,10 +31,11 @@ export const baseTheme: ThemeOptions = {
 
 type CreateThemeProps = {
   themeOverrides?: ThemeOptions;
+  locale?: any;
 };
 
-export function createTheme({ themeOverrides = {} }: CreateThemeProps = {}): Theme {
-  const theme = createMuiTheme(baseTheme, themeOverrides);
+export function createTheme({ themeOverrides = {}, locale }: CreateThemeProps = {}): Theme {
+  const theme = createMuiTheme(baseTheme, themeOverrides, locale);
 
   return theme;
 }

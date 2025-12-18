@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // import Box from '@mui/material/Box';
 // import Avatar from '@mui/material/Avatar';
@@ -38,6 +39,8 @@ export function CustomTableRow({
   onEditRow,
   onDeleteRow,
 }: CustomTableRowProps) {
+  const { t } = useTranslation('common', { keyPrefix: 'table.row' });
+
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -133,12 +136,12 @@ export function CustomTableRow({
         >
           <MenuItem onClick={handleEditRow}>
             <Iconify icon="solar:pen-bold" />
-            Edit
+            {t('editBtnText')}
           </MenuItem>
 
           <MenuItem onClick={handleDeleteRow} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
-            Delete
+            {t('deleteBtnText')}
           </MenuItem>
         </MenuList>
       </Popover>

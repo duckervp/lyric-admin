@@ -1,0 +1,27 @@
+{
+  "accountPopover": {
+    "logoutBtnText": "Đăng xuất"
+  },
+  "table": {
+    "dialog": {
+      "delete": "Xác nhận xóa",
+      "saveBtnText": "Lưu",
+      "deleteBtnText": "Xóa",
+      "cancelBtnText": "Hủy",
+      "batchDeleteDefaultMessage": "Bạn có chắc chắn muốn xóa các mục đã chọn không?"
+    },
+    "toolbar": {
+      "selected": "đã chọn",
+      "searchInputPlaceHolder": "Tìm kiếm ...",
+      "deleteTooltip": "Xóa"
+    },
+    "row": {
+      "editBtnText": "Chỉnh sửa",
+      "deleteBtnText": "Xóa"
+    },
+    "noData": {
+      "notFoundTitle": "Không tìm thấy",
+      "notFoundMessage": "Không tìm thấy kết quả cho <strong>\"{{searchQuery}}\"</strong>.<br /> Vui lòng kiểm tra lỗi chính tả hoặc thử tìm bằng từ khóa đầy đủ."
+    }
+  }
+}

@@ -66,7 +66,7 @@ export function NavDesktop({
 
 // ----------------------------------------------------------------------
 
-export function NavMobile({
+export function  NavMobile({
   sx,
   data,
   open,

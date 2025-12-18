@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
@@ -27,6 +29,8 @@ export default function DeleteDialog({
   onDelete,
   isDeleting,
 }: DeleteDialogProps) {
+  const { t } = useTranslation('common', { keyPrefix: 'table.dialog' });
+
   const handleDeleteClick = async () => {
     try {
       await onDelete();
@@ -51,10 +55,10 @@ export default function DeleteDialog({
             onClick={handleDeleteClick}
             loading={isDeleting}
           >
-            Delete
+            {t('deleteBtnText')}
           </Button>
           <Button size="medium" color="inherit" variant="contained" onClick={onPopupClose}>
-            Cancel
+            {t('cancelBtnText')}
           </Button>
         </Box>
       }

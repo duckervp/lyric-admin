@@ -1,0 +1,49 @@
+{
+  "listView": {
+    "title": "Bài hát",
+    "des": "Quản lý bài hát",
+    "creationBtnText": "Thêm bài hát",
+    "columns": {
+      "title": "Tiêu đề",
+      "artist": "Nghệ sĩ chính",
+      "description": "Mô tả",
+      "release": "Phát hành"
+    },
+    "deleteDialogContent": "Tất cả các liên kết nghệ sĩ liên quan đến bài hát này cũng sẽ bị xóa. Bạn có chắc chắn muốn xóa bài hát <b>{{name}}</b> không?",
+    "batchDeleteDialogContent_one": "Bạn có chắc chắn muốn xóa bài hát đã chọn không?",
+    "batchDeleteDialogContent_other": "Tất cả các liên kết nghệ sĩ liên quan cũng sẽ bị xóa. Bạn có chắc chắn muốn xóa <b>{{selected}}</b> bài hát đã chọn không?"
+  },
+  "formDialog": {
+    "newTitle": "Thêm bài hát",
+    "editTitle": "Chỉnh sửa bài hát",
+    "form": {
+      "title": "Tiêu đề",
+      "slug": "Slug (URL)",
+      "artist": "Nghệ sĩ chính",
+      "description": "Mô tả",
+      "lyric": "Lời bài hát",
+      "release": "Năm phát hành",
+      "password": "Mật khẩu",
+      "changePassword": "Đổi mật khẩu",
+      "newPassword": "Mật khẩu mới",
+      "confirmPassword": "Xác nhận mật khẩu",
+      "createdBy": "Tạo bởi",
+      "updatedBy": "Cập nhật bởi",
+      "on": "vào",
+      "coverArtwork": "Ảnh bìa",
+      "uploadTip": "Nhấn để tải ảnh lên",
+      "recommend": "Đề xuất"
+    }
+  },
+  "artistList": {
+    "artist": "Nghệ sĩ",
+    "title": "Ghi công & Cộng tác",
+    "creationBtnText": "Thêm nghệ sĩ",
+    "emptyListMessage": "Chưa có nghệ sĩ nào được liên kết. Hãy thêm ca sĩ hoặc nhạc sĩ tham gia.",
+    "artistRole": {
+      "singer": "Ca sĩ",
+      "composer": "Nhạc sĩ",
+      "singer_composer": "Ca sĩ & Nhạc sĩ"
+    }
+  }
+}

@@ -1,27 +1,37 @@
 {
-  "list-view": {
+  "listView": {
     "title": "Artists",
     "des": "Manage artists",
-    "creationBtnText": "New artist"
+    "creationBtnText": "New artist",
+    "columns": {
+      "name": "Name",
+      "role": "Role",
+      "bio": "Bio"
+    },
+    "artistRole": {
+      "singer": "Singer",
+      "composer": "Composer",
+      "singer_composer": "Singer&Composer"
+    },
+    "deleteDialogContent": "All related artist's song references also will be removed. Are you sure to delete<b>{{name}}</b> artist?",
+    "batchDeleteDialogContent_one": "Are you sure to delete the selected artist?",
+    "batchDeleteDialogContent_other": "All related artist's song references also will be removed. Are you sure to delete these selected <b>({{selected}})</b> artists?"
   },
-  "form-dialog": {
-    "new-title": "New Artist",
-    "edit-title": "Edit Artist",
+  "formDialog": {
+    "newTitle": "New Artist",
+    "editTitle": "Edit Artist",
     "form": {
       "name": "Name",
-      "email": "Email",
-      "active": "Active",
       "role": "Role",
-      "verified": "Verified",
-      "password": "Password",
-      "change-password": "Change password",
-      "new-password": "New password",
-      "confirm-password": "Confirm password",
-      "created-by": "Created by",
-      "updated-by": "Updated by",
-      "created-at": "Created at",
-      "updated-at": "Updated at",
-      "in": "in"
+      "bio": "Biography",
+      "createdBy": "Created by",
+      "updatedBy": "Updated by",
+      "on": "on",
+      "artistRole": {
+        "singer": "Singer",
+        "composer": "Composer",
+        "singer_composer": "Singer&Composer"
+      }
     }
   }
 }

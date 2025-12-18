@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import type { RowConfigs } from 'src/components/table/table-row';
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -34,7 +35,7 @@ export type TableViewProps = {
   data: any[];
   searchField: string;
   onDeleteRow: (rowId: number) => Promise<void>;
-  onBatchDeleteRows?: (rowIds: number[]) => Promise<void>;
+  onBatchDeleteRows: (rowIds: number[]) => Promise<void>;
   renderFormDialog: (
     selectedRowId: number,
     removeId: () => void,
@@ -42,6 +43,7 @@ export type TableViewProps = {
     setOpen: (val: boolean) => void
   ) => ReactNode;
   renderDeleteDialogContent: (rowData: any) => ReactNode;
+  renderBatchDeleteDialogContent: (selected: number[]) => ReactNode;
   headLabel: Record<string, any>[];
   rowConfigMap: (row: any) => RowConfigs;
 };
@@ -55,17 +57,22 @@ export function TableView({
   onDeleteRow,
   renderFormDialog,
   renderDeleteDialogContent,
+  renderBatchDeleteDialogContent,
   headLabel,
   rowConfigMap,
   onBatchDeleteRows,
 }: TableViewProps) {
+  const { t } = useTranslation('common', { keyPrefix: 'table' });
+
   const table = useTable();
 
   const initFilterState = { [searchField]: '' };
 
   const [filter, setFilter] = useState(initFilterState);
 
-  const [selectedRow, setSelectedRow] = useState<any>();
+  const [selectedRowToEdit, setSelectedRowToEdit] = useState<any>();
+
+  const [selectedRowToDelete, setSelectedRowToDelete] = useState<any>();
 
   const [formDialogOpen, setFormDialogOpen] = useState(false);
 
@@ -83,12 +90,12 @@ export function TableView({
   const notFound = !dataFiltered.length && !!filter.name;
 
   const handleEditRow = (row: any) => {
-    setSelectedRow(row);
+    setSelectedRowToEdit(row);
     setFormDialogOpen(true);
   };
 
   const handleDeleteRow = async () => {
-    await onDeleteRow(selectedRow?.id);
+    await onDeleteRow(selectedRowToDelete?.id);
   };
 
   const handleBatchDelete = async () => {
@@ -101,25 +108,23 @@ export function TableView({
   return (
     <DashboardContent>
       {renderFormDialog(
-        selectedRow?.id,
-        () => setSelectedRow(undefined),
+        selectedRowToEdit?.id,
+        () => setSelectedRowToEdit(undefined),
         formDialogOpen,
         setFormDialogOpen
       )}
       <DeleteDialog
-        title="Delete Confirmation"
+        title={t('dialog.delete')}
         open={deleteDialogOpen}
         onPopupClose={() => setDeleteDialogOpen(false)}
-        children={renderDeleteDialogContent(selectedRow)}
+        children={renderDeleteDialogContent(selectedRowToDelete)}
         onDelete={handleDeleteRow}
       />
       <DeleteDialog
-        title="Delete Confirmation"
+        title={t('dialog.delete')}
         open={batchDeleteDialogOpen}
         onPopupClose={() => setBatchDeleteDialogOpen(false)}
-        children={
-          <Typography variant="body2">Are you sure to delete the selected records?</Typography>
-        }
+        children={renderBatchDeleteDialogContent(table.selected)}
         onDelete={handleBatchDelete}
       />
       <Box
@@ -187,7 +192,7 @@ export function TableView({
                       row={row}
                       onEditRow={() => handleEditRow(row)}
                       onDeleteRow={() => {
-                        setSelectedRow(row);
+                        setSelectedRowToDelete(row);
                         setDeleteDialogOpen(true);
                       }}
                       selected={table.selected.includes(row.id)}

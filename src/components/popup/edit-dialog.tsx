@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
@@ -27,13 +29,14 @@ export default function EditDialog({
   onSave,
   isSaving,
 }: EditDialogProps) {
+  const { t } = useTranslation('common', { keyPrefix: 'table.dialog' });
 
   const handleSaveClick = async () => {
     try {
-      await onSave();        
-      onPopupClose();         
+      await onSave();
+      onPopupClose();
     } catch (err) {
-      handleError(err);     
+      handleError(err);
     }
   };
 
@@ -53,10 +56,10 @@ export default function EditDialog({
             onClick={handleSaveClick}
             loading={isSaving}
           >
-            Save
+            {t('saveBtnText')}
           </Button>
           <Button size="medium" color="inherit" variant="contained" onClick={onPopupClose}>
-            Cancel
+            {t('cancelBtnText')}
           </Button>
         </Box>
       }

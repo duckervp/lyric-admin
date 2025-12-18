@@ -26,7 +26,6 @@ export function DialogPopup({
     <Dialog
       open={popupOpen}
       onClose={onPopupClose}
-      aria-labelledby="dialog"
       sx={{
         '& .MuiDialog-paper': {
           width,

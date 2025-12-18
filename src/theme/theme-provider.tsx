@@ -3,6 +3,10 @@ import type { ThemeProviderProps as MuiThemeProviderProps } from '@mui/material/
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider as ThemeVarsProvider } from '@mui/material/styles';
 
+import { useAppSelector } from 'src/app/hooks';
+import { selectCurrentLang } from 'src/app/api/lang/langSlice';
+
+import { muiLocales } from './core/locale';
 import { createTheme } from './create-theme';
 
 import type {} from './extend-theme-types';
@@ -15,8 +19,13 @@ export type ThemeProviderProps = Partial<MuiThemeProviderProps> & {
 };
 
 export function ThemeProvider({ themeOverrides, children, ...other }: ThemeProviderProps) {
+  const currentLang = useAppSelector(selectCurrentLang);
+
+  const locale = muiLocales[currentLang.locale];
+
   const theme = createTheme({
     themeOverrides,
+    locale,
   });
 
   return (

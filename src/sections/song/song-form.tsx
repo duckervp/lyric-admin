@@ -67,7 +67,7 @@ const mapPayload = (formData: any) => ({
 });
 
 export default function SongFormDialog({ id, removeId, open, setOpen }: SongFormDialogProps) {
-  const { t } = useTranslation('song', { keyPrefix: 'form-dialog' });
+  const { t } = useTranslation('song', { keyPrefix: 'formDialog' });
 
   const { data, isLoading } = useGetSongByIdQuery(id, { skip: !id });
   const [createSong] = useCreateSongMutation();
@@ -145,7 +145,7 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
       canSave={isValidForm()}
       onSave={handleSave}
       onPopupClose={handlePopupClose}
-      title={id ? t('edit-title') : t('new-title')}
+      title={id ? t('editTitle') : t('newTitle')}
       width="1000px"
     >
       <Grid container spacing={4}>
@@ -206,7 +206,6 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
                     name="description"
                     value={formData.description}
                     error={formError.description}
-                    placeholder="Short description of the track..."
                     handleInputChange={handleInputChange}
                     multiline={4}
                   />
@@ -231,7 +230,7 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
             <Card elevation={4}>
               <CardContent>
                 <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                  Cover Artwork
+                  {t('form.coverArtwork')}
                 </Typography>
                 <Paper
                   variant="outlined"
@@ -268,10 +267,10 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
                         <ImageIcon sx={{ fontSize: 40, color: 'text.secondary' }} />
                       </Box>
                       <Typography variant="body2" color="text.secondary">
-                        Click to upload image
+                        {t('form.uploadTip')}
                       </Typography>
                       <Typography variant="caption" color="text.disabled" sx={{ mt: 0.5 }}>
-                        Recommended: 1080x1080
+                        {t('form.recommend')}: 1080x1080
                       </Typography>
                     </>
                   )}
@@ -283,11 +282,10 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
             <Card elevation={4} sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
               <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
                 <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                  Lyrics
+                  {t('form.lyric')}
                 </Typography>
                 <TextInput
                   required
-                  // label={t('form.lyric')}
                   name="lyric"
                   value={formData.lyric}
                   error={formError.lyric}

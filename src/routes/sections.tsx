@@ -4,7 +4,7 @@ import { lazy, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { AuthLayout } from 'src/layouts/auth';
-import { DashboardLayout } from 'src/layouts/dashboard';
+import { ProfileLayout, DashboardLayout } from 'src/layouts/dashboard';
 
 import Fallback from 'src/components/loading/fallback';
 import RequireAuth from 'src/components/auth/require-auth';
@@ -14,7 +14,7 @@ import { ROUTES } from './config';
 // ----------------------------------------------------------------------
 
 export const DashboardPage = lazy(() => import('src/pages/dashboard'));
-export const BlogPage = lazy(() => import('src/pages/blog'));
+export const ProfilePage = lazy(() => import('src/pages/profile'));
 export const UserPage = lazy(() => import('src/pages/user'));
 export const SongPage = lazy(() => import('src/pages/song'));
 export const ArtistPage = lazy(() => import('src/pages/artist'));
@@ -37,11 +37,21 @@ export const routesSection: RouteObject[] = [
     children: [
       { index: true, element: <DashboardPage /> },
       { path: ROUTES.USER, element: <UserPage /> },
-      { path: 'products', element: <ProductsPage /> },
-      { path: 'blog', element: <BlogPage /> },
-      { path: 'song', element: <SongPage /> },
-      { path: 'artist', element: <ArtistPage /> },
+      { path: ROUTES.SONG, element: <SongPage /> },
+      { path: ROUTES.ARTIST, element: <ArtistPage /> },
     ],
+  },
+  {
+    element: (
+      <ProfileLayout>
+        <Suspense fallback={<Fallback />}>
+          <RequireAuth>
+            <Outlet />
+          </RequireAuth>
+        </Suspense>
+      </ProfileLayout>
+    ),
+    children: [{ path: ROUTES.PROFILE, element: <ProfilePage /> }],
   },
   {
     path: ROUTES.LOGIN,

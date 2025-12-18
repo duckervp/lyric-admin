@@ -1,28 +1,50 @@
 {
-  "list-view": {
+  "listView": {
     "title": "Songs",
     "des": "Manage songs",
-    "creationBtnText": "New song"
+    "creationBtnText": "New song",
+    "columns": {
+      "title": "Title",
+      "artist": "Main Artist",
+      "description": "Description",
+      "release": "Release"
+    },
+    "deleteDialogContent": "All related artist's song references also will be removed. Are you sure to delete<b>{{name}}</b> artist?",
+    "batchDeleteDialogContent_one": "Are you sure to delete the selected song?",
+    "batchDeleteDialogContent_other": "All related song's artist references also will be removed. Are you sure to delete these selected <b>({{selected}})</b> songs?"
+  
   },
-  "form-dialog": {
-    "new-title": "New Song",
-    "edit-title": "Edit Song",
+  "formDialog": {
+    "newTitle": "New Song",
+    "editTitle": "Edit Song",
     "form": {
       "title": "Title",
       "slug": "Slug (URL)",
       "artist": "Main Artist",
       "description": "Description",
       "lyric": "Lyrics",
-      "release": "Release Date",
+      "release": "Release Year",
       "password": "Password",
-      "change-password": "Change password",
-      "new-password": "New password",
-      "confirm-password": "Confirm password",
-      "created-by": "Created by",
-      "updated-by": "Updated by",
-      "created-at": "Created at",
-      "updated-at": "Updated at",
-      "in": "in"
+      "changePassword": "Change password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "createdBy": "Created by",
+      "updatedBy": "Updated by",
+      "on": "on",
+      "coverArtwork": "Cover Artwork",
+      "uploadTip": "Click to upload image",
+      "recommend": "Recommended"
+    }
+  },
+  "artistList": {
+    "artist": "Artist",
+    "title": "Credits & Contributors",
+    "creationBtnText": "Add Artist",
+    "emptyListMessage": "No songArtists linked yet. Add contributors like singers or composers.",
+    "artistRole": {
+      "singer": "Singer",
+      "composer": "Composer",
+      "singer_composer": "Singer&Composer"
     }
   }
 }
