@@ -1,0 +1,27 @@
+{
+    "main": {
+      "title": "Profile Manager",
+      "basicForm": {
+        "title": "Information Update",
+        "description": "Update your photo and professional details.",
+        "name": "Name",
+        "email": "Email",
+        "saveChangesBtnText": "Save Changes",
+        "cancelBtnText": "Cancel"
+      },
+      "passwordForm": {
+        "title": "Password Update",
+        "description": "Secure your account with a strong password.",
+        "currentPassword": "Current password",
+          "newPassword": "New password",
+          "confirmPassword": "Confirm password",
+          "updateBtnText": "Update Password",
+          "suggestion": "Password must be at least 6 characters long and contain both letters and numbers."
+        },
+        "dangerZone": {
+            "title": "Deactivate Account",
+            "warning": "Once deleted, account data cannot be recovered.",
+            "deactivateBtnText": "Deactivate"
+        }
+  }
+}

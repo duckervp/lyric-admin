@@ -12,6 +12,7 @@ type TextInputProps = {
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   multiline?: number;
   placeholder?: string;
+  disabled?: boolean;
 };
 
 export function TextInput({
@@ -24,6 +25,7 @@ export function TextInput({
   handleInputChange,
   multiline,
   placeholder,
+  disabled,
 }: TextInputProps) {
   return (
     <Box sx={{ width: '100%' }}>
@@ -55,6 +57,7 @@ export function TextInput({
         placeholder={placeholder}
         multiline={!!multiline}
         minRows={multiline}
+        disabled={disabled}
       />
     </Box>
   );

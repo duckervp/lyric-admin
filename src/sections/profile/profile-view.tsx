@@ -1,57 +1,44 @@
-import { useState, useEffect } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import type { Form } from 'src/hooks/use-debounce-form';
+
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
+import Grid from '@mui/material/Grid';
+import List from '@mui/material/List';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import TableBody from '@mui/material/TableBody';
+import Lock from '@mui/icons-material/Lock';
+import ListItem from '@mui/material/ListItem';
 import Container from '@mui/material/Container';
+import Delete from '@mui/icons-material/Delete';
 import Typography from '@mui/material/Typography';
-import TableContainer from '@mui/material/TableContainer';
-import TablePagination from '@mui/material/TablePagination';
+import Warning from '@mui/icons-material/Warning';
+import Settings from '@mui/icons-material/Settings';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemButton from '@mui/material/ListItemButton';
 
-import { UserRole } from 'src/utils/type';
+import { ROLES } from 'src/routes/config';
 
+import useDebounceForm from 'src/hooks/use-debounce-form';
+
+import { useAppSelector } from 'src/app/hooks';
+import { selectCurrentUser } from 'src/app/api/auth/authSlice';
 import {
-  useGetAllUsersQuery,
+  useGetUserByIdQuery,
   useDeleteUserMutation,
-  useDeleteUsersMutation,
+  useUpdateUserMutation,
 } from 'src/app/api/user/userApiSlice';
 
-import { Label } from 'src/components/label';
-import { Iconify, UserIcon } from 'src/components/iconify';
-import Fallback from 'src/components/loading/fallback';
-import { TableView } from 'src/components/table/table-view';
-import { ThemeProvider, createTheme, useTheme } from '@mui/material';
-import Grid from '@mui/material/Grid';
-import CssBaseline from '@mui/material/CssBaseline';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Paper from '@mui/material/Paper';
-import TextField from '@mui/material/TextField';
-import Divider from '@mui/material/Divider';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
-import Stack from '@mui/material/Stack';
-import Person from '@mui/icons-material/Person';
-import Lock from '@mui/icons-material/Lock';
-import Settings from '@mui/icons-material/Settings';
-import Work from '@mui/icons-material/Work';
-import Email from '@mui/icons-material/Email';
-import Warning from '@mui/icons-material/Warning';
-import Delete from '@mui/icons-material/Delete';
 import { Logo } from 'src/components/logo';
+import { UserIcon } from 'src/components/iconify';
+import Fallback from 'src/components/loading/fallback';
+import { TextInput } from 'src/components/input/text-input';
+import { PasswordInput } from 'src/components/input/password-input';
 import { AvatarUpload } from 'src/components/upload/avatar-uploader';
-import { varAlpha } from 'minimal-shared/utils';
+
 // ----------------------------------------------------------------------
 export type UserProps = {
   id: number;
@@ -63,31 +50,73 @@ export type UserProps = {
   verified: boolean;
 };
 
+const form: Form<any> = {
+  initialState: {
+    name: '',
+    email: '',
+  },
+  requiredFields: ['name'],
+};
+
+const passwordForm: Form<any> = {
+  initialState: {
+    currentPassword: '',
+    password: '',
+    confirmPassword: '',
+  },
+  requiredFields: ['currentPassword', 'password', 'confirmPassword'],
+};
+
+const mapPayload = (formData: any) => ({
+  name: formData.name,
+  email: formData.email,
+  password: formData.password,
+  role: formData.admin ? ROLES.ADMIN : ROLES.USER,
+  active: formData.active,
+  verified: formData.verified,
+});
+
 export function ProfileView() {
-  const { t } = useTranslation('user', { keyPrefix: 'listView' });
+  const { t } = useTranslation('profile', { keyPrefix: 'main' });
 
-  const { data: userData, isLoading } = useGetAllUsersQuery({});
+  const currentUser = useAppSelector(selectCurrentUser);
 
-  const [users, setUsers] = useState<UserProps[]>([]);
+  const { data: userData, isLoading } = useGetUserByIdQuery(currentUser?.id, {
+    skip: !currentUser?.id,
+  });
+  const [updateUser] = useUpdateUserMutation();
 
   const [deleteUser] = useDeleteUserMutation();
 
-  const [deleteUsers] = useDeleteUsersMutation();
-
-  const theme = useTheme();
-
-  useEffect(() => {
-    if (userData) {
-      setUsers(userData.data);
+  const initialState = useMemo(() => {
+    if (userData?.data) {
+      const user = userData.data;
+      return {
+        name: user.name || '',
+        email: user.email || '',
+      };
     }
+    return form.initialState;
   }, [userData]);
 
-  const handleDeleteRow = async (rowId: number) => {
-    await deleteUser(rowId);
-  };
+  const { formData, formError, handleInputChange, isValidForm, resetForm } = useDebounceForm({
+    initialState,
+    requiredFields: form.requiredFields,
+  });
 
-  const handleDeleteRows = async (rowIds: number[]) => {
-    await deleteUsers(rowIds);
+  const {
+    formData: passwordFormData,
+    formError: passwordFormError,
+    handleInputChange: handlePasswordFormInputChange,
+    isValidForm: isValidPasswordForm,
+  } = useDebounceForm(passwordForm);
+
+  const handleUpdateBasicInfo = async () => {};
+
+  const handleUpdatePassword = async () => {};
+
+  const handleDeactivate = async () => {
+
   };
 
   if (isLoading) {
@@ -110,34 +139,28 @@ export function ProfileView() {
           >
             <Logo />
             <Box sx={{ flexGrow: 1 }}>
-              <Typography variant="h4">
-                {/* {t('title')} */}
-                Profile Manager
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {/* {t('des')} */}
-              </Typography>
+              <Typography variant="h4">{t('title')}</Typography>
             </Box>
           </Box>
           <Card variant="outlined" sx={{ overflow: 'hidden' }}>
             <List component="nav" sx={{ p: 1 }}>
-              <ListItem disablePadding sx={{mb: 1}}>
+              <ListItem disablePadding sx={{ mb: 1 }}>
                 <ListItemButton selected sx={{ borderRadius: 2 }}>
                   <ListItemIcon>
                     <UserIcon fontSize="small" color="primary" />
                   </ListItemIcon>
                   <ListItemText
                     primary="Personal Info"
-                    primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }}
+                    slotProps={{ primary: { variant: 'body2', fontWeight: 600 } }}
                   />
                 </ListItemButton>
               </ListItem>
-              <ListItem disablePadding sx={{mb: 1}}>
+              <ListItem disablePadding sx={{ mb: 1 }}>
                 <ListItemButton sx={{ borderRadius: 2 }}>
                   <ListItemIcon>
                     <Lock fontSize="small" />
                   </ListItemIcon>
-                  <ListItemText primary="Security" primaryTypographyProps={{ variant: 'body2' }} />
+                  <ListItemText primary="Security" slotProps={{ primary: { variant: 'body2' } }} />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
@@ -147,7 +170,7 @@ export function ProfileView() {
                   </ListItemIcon>
                   <ListItemText
                     primary="Preferences"
-                    primaryTypographyProps={{ variant: 'body2' }}
+                    slotProps={{ primary: { variant: 'body2' } }}
                   />
                 </ListItemButton>
               </ListItem>
@@ -162,14 +185,14 @@ export function ProfileView() {
             <Card>
               <Box p={3} borderBottom="1px solid" borderColor="divider" bgcolor="grey.50">
                 <Typography variant="subtitle1" fontWeight={700}>
-                  Information Update
+                  {t('basicForm.title')}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Update your photo and professional details.
+                  {t('basicForm.description')}
                 </Typography>
               </Box>
 
-              <Box component="form" p={4}>
+              <Box p={4}>
                 <Grid container spacing={6}>
                   <Grid size={{ xs: 12, sm: 4 }}>
                     <AvatarUpload
@@ -181,79 +204,39 @@ export function ProfileView() {
                   <Grid size={{ xs: 12, sm: 8 }}>
                     <Stack spacing={3}>
                       <Grid container spacing={2}>
-                        <Grid size={{ xs: 12, sm: 6 }}>
-                          <TextField
-                            fullWidth
-                            label="Full Name"
-                            size="small"
-                            // value={profile.name}
-                            // onChange={(e) => setProfile(p => ({ ...p, name: e.target.value }))}
-                            slotProps={{
-                              input: {
-                                startAdornment: (
-                                  <Person sx={{ mr: 1, color: 'text.disabled' }} fontSize="small" />
-                                ),
-                              },
-                            }}
-                          />
-                        </Grid>
-                        <Grid size={{ xs: 12, sm: 6 }}>
-                          <TextField
-                            fullWidth
-                            label="Email Address"
-                            size="small"
-                            disabled
-                            // value={profile.email}
-                            slotProps={{
-                              input: {
-                                startAdornment: (
-                                  <Email sx={{ mr: 1, color: 'text.disabled' }} fontSize="small" />
-                                ),
-                              },
-                            }}
-                          />
-                        </Grid>
-                      </Grid>
-
-                      <TextField
-                        fullWidth
-                        label="Job Role"
-                        size="small"
-                        placeholder="e.g. Senior Designer"
-                        // value={profile.role}
-                        // onChange={(e) => setProfile(p => ({ ...p, role: e.target.value }))}
-                        slotProps={{
-                          input: {
-                            startAdornment: (
-                              <Work sx={{ mr: 1, color: 'text.disabled' }} fontSize="small" />
-                            ),
-                          },
-                        }}
-                      />
-
-                      <Box>
-                        <TextField
-                          fullWidth
-                          label="Bio"
-                          multiline
-                          rows={3}
-                          placeholder="Tell us about yourself"
-                          // value={profile.bio}
-                          // onChange={(e) => setProfile(p => ({ ...p, bio: e.target.value }))}
-                          // helperText={`${profile.bio.length}/150 characters`}
-                          slotProps={{ input: { sx: { fontSize: '0.875rem' } } }}
+                        <TextInput
+                          required
+                          label={t('basicForm.name')}
+                          name="name"
+                          value={formData.name}
+                          error={formError.name}
+                          handleInputChange={handleInputChange}
                         />
-                      </Box>
+
+                        <TextInput
+                          type="email"
+                          label={t('basicForm.email')}
+                          name="email"
+                          value={formData.email}
+                          error={formError.email}
+                          handleInputChange={handleInputChange}
+                          disabled
+                        />
+                      </Grid>
                     </Stack>
                   </Grid>
                 </Grid>
 
                 <Box mt={4} display="flex" justifyContent="flex-end" gap={2}>
-                  <Button variant="text" color="inherit">
-                    Cancel
+                  <Button variant="text" color="inherit" onClick={() => resetForm(initialState)}>
+                    {t('basicForm.cancelBtnText')}
                   </Button>
-                  <Button variant="contained" type="submit">
-                    {0 ? 'Saving...' : 'Save Changes'}
+                  <Button
+                    variant="contained"
+                    onClick={handleUpdateBasicInfo}
+                    disabled={!isValidForm()}
+                  >
+                    {t('basicForm.saveChangesBtnText')}
                   </Button>
                 </Box>
               </Box>
@@ -263,46 +246,41 @@ export function ProfileView() {
             <Card>
               <Box p={3} borderBottom="1px solid" borderColor="divider" bgcolor="grey.50">
                 <Typography variant="subtitle1" fontWeight={700}>
-                  Password Update
+                  {t('passwordForm.title')}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Secure your account with a strong password.
+                  {t('passwordForm.description')}
                 </Typography>
               </Box>
               <Box component="form" p={4}>
                 <Grid container spacing={3}>
                   <Grid size={{ xs: 12, md: 6 }}>
                     <Stack spacing={3}>
-                      <TextField
-                        fullWidth
-                        type="password"
-                        label="Current Password"
-                        size="small"
-                        // value={passwordForm.current}
-                        // onChange={(e) => setPasswordForm(p => ({ ...p, current: e.target.value }))}
-                        required
+                      <PasswordInput
+                        externalLabel={t('passwordForm.currentPassword')}
+                        name="currentPassword"
+                        value={passwordFormData.currentPassword}
+                        error={passwordFormError.currentPassword}
+                        handleInputChange={handlePasswordFormInputChange}
                       />
+
                       <Grid container spacing={2}>
                         <Grid size={6}>
-                          <TextField
-                            fullWidth
-                            type="password"
-                            label="New Password"
-                            size="small"
-                            // value={passwordForm.new}
-                            // onChange={(e) => setPasswordForm(p => ({ ...p, new: e.target.value }))}
-                            required
+                          <PasswordInput
+                            externalLabel={t('passwordForm.newPassword')}
+                            name="password"
+                            value={passwordFormData.password}
+                            error={passwordFormError.password}
+                            handleInputChange={handlePasswordFormInputChange}
                           />
                         </Grid>
                         <Grid size={6}>
-                          <TextField
-                            fullWidth
-                            type="password"
-                            label="Confirm New"
-                            size="small"
-                            // value={passwordForm.confirm}
-                            // onChange={(e) => setPasswordForm(p => ({ ...p, confirm: e.target.value }))}
-                            required
+                          <PasswordInput
+                            externalLabel={t('passwordForm.confirmPassword')}
+                            name="confirmPassword"
+                            value={passwordFormData.confirmPassword}
+                            error={passwordFormError.confirmPassword}
+                            handleInputChange={handlePasswordFormInputChange}
                           />
                         </Grid>
                       </Grid>
@@ -312,8 +290,7 @@ export function ProfileView() {
                       >
                         <Warning color="info" fontSize="small" />
                         <Typography variant="caption" color="info.dark">
-                          Password must be at least 8 characters long and contain both letters and
-                          numbers.
+                          {t('passwordForm.suggestion')}
                         </Typography>
                       </Box>
                     </Stack>
@@ -321,30 +298,39 @@ export function ProfileView() {
                 </Grid>
 
                 <Box mt={4} display="flex" justifyContent="flex-end">
-                  <Button variant="contained" type="submit">
-                    Update Password
+                  <Button
+                    variant="contained"
+                    onClick={handleUpdatePassword}
+                    disabled={!isValidPasswordForm()}
+                  >
+                    {t('passwordForm.updateBtnText')}
                   </Button>
                 </Box>
               </Box>
             </Card>
 
             {/* Danger Zone */}
-            <Card>
+            <Card sx={{ bgcolor: '#f0d3cdff' }}>
               <Box p={3} display="flex" justifyContent="space-between" alignItems="center">
                 <Box>
                   <Typography variant="subtitle2" color="error.dark" fontWeight={700}>
-                    Deactivate Account
+                    {t('dangerZone.title')}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                    Once deleted, account data cannot be recovered.
+                    {t('dangerZone.warning')}
                   </Typography>
                 </Box>
-                <Button variant="outlined" color="error" startIcon={<Delete />}>
-                  Deactivate
+                <Button
+                  variant="outlined"
+                  color="error"
+                  startIcon={<Delete />}
+                  onClick={handleDeactivate}
+                >
+                  {t('dangerZone.deactivateBtnText')}
                 </Button>
               </Box>
             </Card>
-            <Box sx={{height: "50px"}} />
+            <Box sx={{ height: '50px' }} />
           </Stack>
         </Grid>
       </Grid>
