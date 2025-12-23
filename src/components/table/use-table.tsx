@@ -19,8 +19,6 @@ export function useTable() {
 
   const onSelectAllRows = useCallback((checked: boolean, newSelecteds: number[]) => {
     if (checked) {
-      console.log(newSelecteds);
-
       setSelected(newSelecteds);
       return;
     }
@@ -32,8 +30,6 @@ export function useTable() {
       const newSelected = selected.includes(id)
         ? selected.filter((value) => value !== id)
         : [...selected, id];
-
-      console.log(newSelected);
 
       setSelected(newSelected);
     },
