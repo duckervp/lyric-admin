@@ -1,5 +1,9 @@
+import { useTranslation } from 'react-i18next';
+
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+
+import { handleError } from 'src/utils/notify';
 
 import { DialogPopup } from './dialog-popup';
 //-------------------------------------------------------------------------
@@ -11,7 +15,7 @@ type EditDialogProps = {
   width: string;
   children: React.ReactNode;
   canSave: boolean;
-  onSave: () => void;
+  onSave: () => Promise<void>;
   isSaving?: boolean;
 };
 
@@ -25,6 +29,17 @@ export default function EditDialog({
   onSave,
   isSaving,
 }: EditDialogProps) {
+  const { t } = useTranslation('common', { keyPrefix: 'table.dialog' });
+
+  const handleSaveClick = async () => {
+    try {
+      await onSave();
+      onPopupClose();
+    } catch (err) {
+      handleError(err);
+    }
+  };
+
   return (
     <DialogPopup
       popupOpen={open}
@@ -38,13 +53,13 @@ export default function EditDialog({
             color="primary"
             variant="contained"
             disabled={!canSave}
-            onClick={onSave}
+            onClick={handleSaveClick}
             loading={isSaving}
           >
-            Save
+            {t('saveBtnText')}
           </Button>
           <Button size="medium" color="inherit" variant="contained" onClick={onPopupClose}>
-            Cancel
+            {t('cancelBtnText')}
           </Button>
         </Box>
       }

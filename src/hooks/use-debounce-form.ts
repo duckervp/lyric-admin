@@ -1,6 +1,10 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 
+import { shallowEqual } from 'src/utils/check';
 import { validateField } from 'src/utils/validation';
+
+import { useAppSelector } from 'src/app/hooks';
+import { selectCurrentLang } from 'src/app/api/lang/langSlice';
 
 import { useDebounce } from './use-debounce';
 
@@ -32,11 +36,15 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
   } | null>(null);
   const [debouncedFields, setDebouncedFields] = useState<Set<string>>(new Set());
 
+  const [forceInvalid, setForceInvalid] = useState<boolean>(false);
+
   // Keep a mutable copy of formData
   const formDataRef = useRef<T>(form.initialState);
 
   // Debounce the input value
   const debouncedInput = useDebounce(inputValue, delay);
+
+  const currentLang = useAppSelector(selectCurrentLang);
 
   // Update form data and validate when debounced input changes
   useEffect(() => {
@@ -50,7 +58,6 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
         form.requiredFields.includes(name),
         formDataRef.current
       );
-      console.log('error', error);
       setFormError((prevError) => ({ ...prevError, [name]: error }));
 
       // Remove the field from debouncedFields since it's being updated
@@ -62,12 +69,31 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
     }
   }, [debouncedInput, form.requiredFields]);
 
+  useEffect(() => {
+    setFormData(form.initialState);
+    formDataRef.current = form.initialState;
+    setFormError(
+      Object.fromEntries(Object.keys(form.initialState).map((key) => [key, ''])) as Record<
+        keyof T,
+        string
+      >
+    );
+    setInputValue(null);
+    setDebouncedFields(new Set());
+  }, [form.initialState]);
+
+  useEffect(() => {
+    if (shallowEqual(formDataRef.current, form.initialState)) return; // avoid overwriting manual edits
+    setFormData(form.initialState);
+    formDataRef.current = form.initialState;
+  }, [form.initialState]);
+
   const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const { type, name, value: val, checked } = event.target;
-    
+
     const value = type === 'checkbox' ? checked : val;
 
-    if (['text', 'password', 'number', 'email', 'gender', 'store-select'].includes(type)) {
+    if (['text', 'password', 'number', 'email', 'gender', 'store-select', 'custom'].includes(type)) {
       setInputValue({ name, value });
 
       setFormError((prevError) => ({ ...prevError, [name]: '' }));
@@ -82,13 +108,21 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
       formDataRef.current = updatedData; // Update the ref copy
       return updatedData;
     });
-  }, [formError]);
+  }, []);
 
   const isValidForm = () => {
+    // console.log("requiredF", form.requiredFields);
+
     const allFilled = form.requiredFields.every((field) => formDataRef.current[field]);
+    // console.log("allFilled", allFilled);
+
     const noErrors = Object.values(formError).every((val) => !val);
+    // console.log("noErrors", noErrors);
+
     const noDebouncePending = debouncedFields.size === 0;
-    return allFilled && noErrors && noDebouncePending;
+    // console.log("noDebouncePending", noDebouncePending);
+
+    return !forceInvalid && allFilled && noErrors && noDebouncePending && !shallowEqual(form.initialState, formDataRef.current);
   };
 
   const resetForm = useCallback(
@@ -108,5 +142,7 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
     [form]
   );
 
-  return { formData, formError, handleInputChange, setFormError, isValidForm, resetForm };
+  const invalidForm = () => setForceInvalid(true);
+
+  return { formData, formError, handleInputChange, setFormError, isValidForm, resetForm, invalidForm };
 }

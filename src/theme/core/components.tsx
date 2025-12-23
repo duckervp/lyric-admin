@@ -42,7 +42,7 @@ const MuiCard: Components<Theme>['MuiCard'] = {
       zIndex: 0,
       position: 'relative',
       boxShadow: theme.vars.customShadows.card,
-      borderRadius: theme.shape.borderRadius * 2,
+      borderRadius: Number(theme.shape.borderRadius) * 2,
     }),
   },
 };
@@ -63,11 +63,11 @@ const MuiOutlinedInput: Components<Theme>['MuiOutlinedInput'] = {
   defaultProps: {
     size: 'small',
   },
-  styleOverrides: {
-    notchedOutline: ({ theme }) => ({
-      borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.2),
-    }),
-  },
+  // styleOverrides: {
+  //   notchedOutline: ({ theme }) => ({
+  //     borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.2),
+  //   }),
+  // },
 };
 
 const MuiPaper: Components<Theme>['MuiPaper'] = {

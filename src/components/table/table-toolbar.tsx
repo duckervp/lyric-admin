@@ -1,3 +1,6 @@
+import { useTranslation } from 'react-i18next';
+
+import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -6,16 +9,23 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { Iconify } from 'src/components/iconify';
-
 // ----------------------------------------------------------------------
 
 type CustomTableToolbarProps = {
   numSelected: number;
   filterName: string;
   onFilterName: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onDelete?: () => void;
 };
 
-export function CustomTableToolbar({ numSelected, filterName, onFilterName }: CustomTableToolbarProps) {
+export function CustomTableToolbar({
+  numSelected,
+  filterName,
+  onFilterName,
+  onDelete
+}: CustomTableToolbarProps) {
+  const { t } = useTranslation('common', { keyPrefix: 'table.toolbar' });
+
   return (
     <Toolbar
       sx={{
@@ -31,14 +41,14 @@ export function CustomTableToolbar({ numSelected, filterName, onFilterName }: Cu
     >
       {numSelected > 0 ? (
         <Typography component="div" variant="subtitle1">
-          {numSelected} selected
+          {numSelected} {t('selected')}
         </Typography>
       ) : (
         <OutlinedInput
           fullWidth
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search ..."
+          placeholder={t('searchInputPlaceHolder')}
           startAdornment={
             <InputAdornment position="start">
               <Iconify width={20} icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
@@ -49,17 +59,18 @@ export function CustomTableToolbar({ numSelected, filterName, onFilterName }: Cu
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
+        <Tooltip title={t('deleteTooltip')} onClick={onDelete}>
           <IconButton>
             <Iconify icon="solar:trash-bin-trash-bold" />
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <Iconify icon="ic:round-filter-list" />
-          </IconButton>
-        </Tooltip>
+        <Box />
+        // <Tooltip title="Filter list">
+        //   <IconButton>
+        //     <Iconify icon="ic:round-filter-list" />
+        //   </IconButton>
+        // </Tooltip>
       )}
     </Toolbar>
   );

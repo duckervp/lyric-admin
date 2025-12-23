@@ -11,7 +11,11 @@ export const ROUTES = {
   FORGOT_PASSWORD: '/forgot-password',
   DASHBOARD: '/dashboard',
   PROFILE: '/profile',
+  PROFILE_INFO: '/profile#personal-info',
+  PROFILE_SECURITY: '/profile#security',
   SETTINGS: '/settings',
   NOT_FOUND: '/404',
   USER: '/user',
+  SONG: '/song',
+  ARTIST: '/artist',
 }

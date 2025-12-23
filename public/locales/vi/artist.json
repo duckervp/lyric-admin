@@ -1,0 +1,37 @@
+{
+  "listView": {
+    "title": "Nghệ sĩ",
+    "des": "Quản lý nghệ sĩ",
+    "creationBtnText": "Thêm nghệ sĩ",
+    "columns": {
+      "name": "Tên",
+      "role": "Vai trò",
+      "bio": "Tiểu sử"
+    },
+    "artistRole": {
+      "singer": "Ca sĩ",
+      "composer": "Nhạc sĩ",
+      "singer_composer": "Ca sĩ & Nhạc sĩ"
+    },
+    "deleteDialogContent": "Tất cả các liên kết bài hát liên quan đến nghệ sĩ này cũng sẽ bị xóa. Bạn có chắc chắn muốn xóa nghệ sĩ <b>{{name}}</b> không?",
+    "batchDeleteDialogContent_one": "Bạn có chắc chắn muốn xóa nghệ sĩ đã chọn không?",
+    "batchDeleteDialogContent_other": "Tất cả các liên kết bài hát liên quan cũng sẽ bị xóa. Bạn có chắc chắn muốn xóa <b>{{selected}}</b> nghệ sĩ đã chọn không?"
+  },
+  "formDialog": {
+    "newTitle": "Thêm nghệ sĩ",
+    "editTitle": "Chỉnh sửa nghệ sĩ",
+    "form": {
+      "name": "Tên",
+      "role": "Vai trò",
+      "bio": "Tiểu sử",
+      "createdBy": "Tạo bởi",
+      "updatedBy": "Cập nhật bởi",
+      "on": "vào",
+      "artistRole": {
+        "singer": "Ca sĩ",
+        "composer": "Nhạc sĩ",
+        "singer_composer": "Ca sĩ & Nhạc sĩ"
+      }
+    }
+  }
+}

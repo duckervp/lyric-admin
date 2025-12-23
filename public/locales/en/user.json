@@ -1,7 +1,26 @@
 {
-  "user-form-dialog": {
-    "new-title": "New User",
-    "edit-title": "Edit User",
+  "listView": {
+    "title": "Users",
+    "des": "Manage users",
+    "creationBtnText": "New user",
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "verified": "Verified",
+      "active": "Status"
+    },
+    "status": {
+      "active": "active",
+      "inactive": "inactive"
+    },
+    "deleteDialogContent": "Are you sure to delete <b>{{name}}</b> user?",
+    "batchDeleteDialogContent_one": "Are you sure to delete the selected song?",
+    "batchDeleteDialogContent_other": "Are you sure to delete these selected <b>({{selected}})</b> songs?"
+  },
+  "formDialog": {
+    "newTitle": "New User",
+    "editTitle": "Edit User",
     "form": {
       "name": "Name",
       "email": "Email",
@@ -9,9 +28,14 @@
       "role": "Admin",
       "verified": "Verified",
       "password": "Password",
-      "change-password": "Change password",
-      "new-password": "New password",
-      "confirm-password": "Confirm password"
+      "changePassword": "Change password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "createdBy": "Created by",
+      "updatedBy": "Updated by",
+      "createdAt": "Created at",
+      "updatedAt": "Updated at",
+      "on": "on"
     }
   }
 }

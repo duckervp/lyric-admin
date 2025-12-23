@@ -10,7 +10,9 @@ type TextInputProps = {
   value: string;
   error: string;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  multiline?: boolean;
+  multiline?: number;
+  placeholder?: string;
+  disabled?: boolean;
 };
 
 export function TextInput({
@@ -22,11 +24,16 @@ export function TextInput({
   error,
   handleInputChange,
   multiline,
+  placeholder,
+  disabled,
 }: TextInputProps) {
   return (
     <Box sx={{ width: '100%' }}>
       {label && (
-        <Typography variant="body2">
+        <Typography
+          variant="caption"
+          sx={{ mb: 1, display: 'block', color: 'text.secondary', fontWeight: 'bold' }}
+        >
           {label}
           {required && (
             <Box component="span" sx={{ color: 'error.main', ml: 0.5 }}>
@@ -43,12 +50,16 @@ export function TextInput({
         error={!!error}
         helperText={error}
         onChange={handleInputChange}
+        onInput={handleInputChange}
+        // onBlur={handleInputChange}
         sx={{ mb: 0 }}
         slotProps={{
           inputLabel: { shrink: true },
         }}
-        multiline={multiline}
-        rows={multiline ? 2 : undefined}
+        placeholder={placeholder}
+        multiline={!!multiline}
+        minRows={multiline}
+        disabled={disabled}
       />
     </Box>
   );

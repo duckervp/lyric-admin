@@ -53,11 +53,9 @@ export function SignUpView() {
       }
 
       handleLogin(data);
-      console.log('Register successful:', data);
 
       router.push('/');
     } catch (error) {
-      console.log('Register error:', error);
       handleError(error, 'Register failed!');
     }
   };
@@ -99,7 +97,8 @@ export function SignUpView() {
       />
 
       <PasswordInput
-        inpLabel="Password"
+        required
+        label="Password"
         name="password"
         value={formData.password}
         error={formError.password}
@@ -108,10 +107,11 @@ export function SignUpView() {
       />
 
       <PasswordInput
-        inpLabel="Confirm password"
+        required
+        label="Confirm password"
         name="confirmPassword"
-        value={formData.confirmPassword}
-        error={formError.confirmPassword}
+        value={formData.password}
+        error={formError.password}
         handleInputChange={handleInputChange}
         sx={{ mb: 3 }}
       />

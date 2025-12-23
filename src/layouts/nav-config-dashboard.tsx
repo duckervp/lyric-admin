@@ -1,4 +1,3 @@
-import { Label } from 'src/components/label';
 import { SvgColor } from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
@@ -12,40 +11,49 @@ export type NavItem = {
   info?: React.ReactNode;
 };
 
-export const navData = [
-  {
-    title: 'Dashboard',
-    path: '/',
-    icon: icon('ic-analytics'),
-  },
-  {
-    title: 'User',
-    path: '/user',
-    icon: icon('ic-user'),
-  },
-  {
-    title: 'Product',
-    path: '/products',
-    icon: icon('ic-cart'),
-    info: (
-      <Label color="error" variant="inverted">
-        +3
-      </Label>
-    ),
-  },
-  {
-    title: 'Blog',
-    path: '/blog',
-    icon: icon('ic-blog'),
-  },
-  {
-    title: 'Sign in',
-    path: '/sign-in',
-    icon: icon('ic-lock'),
-  },
-  {
-    title: 'Not found',
-    path: '/404',
-    icon: icon('ic-disabled'),
-  },
-];
+export const navData = {
+  viVN: [
+    {
+      title: 'Tổng Quan',
+      path: '/',
+      icon: icon('ic-analytics'),
+    },
+    {
+      title: 'Người Dùng',
+      path: '/user',
+      icon: icon('ic-user'),
+    },
+    {
+      title: 'Bài Hát',
+      path: '/song',
+      icon: icon('ic-music-library'),
+    },
+    {
+      title: 'Nghệ Sĩ',
+      path: '/artist',
+      icon: icon('ic-music-artist'),
+    },
+  ],
+  enUS: [
+    {
+      title: 'Dashboard',
+      path: '/',
+      icon: icon('ic-analytics'),
+    },
+    {
+      title: 'User',
+      path: '/user',
+      icon: icon('ic-user'),
+    },
+    {
+      title: 'Song',
+      path: '/song',
+      icon: icon('ic-blog'),
+    },
+    {
+      title: 'Artist',
+      path: '/artist',
+      icon: icon('ic-user'),
+    },
+  ],
+};

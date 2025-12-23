@@ -1,3 +1,4 @@
+import { Trans, useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -12,9 +13,8 @@ import { ROUTES } from 'src/routes/config';
 import { useRouter } from 'src/routes/hooks';
 
 import useLogin from 'src/hooks/use-login';
+import useErrorHandle from 'src/hooks/use-error-handle';
 import useDebounceForm from 'src/hooks/use-debounce-form';
-
-import { handleError } from 'src/utils/notify';
 
 import { useLoginMutation } from 'src/app/api/auth/authApiSlice';
 
@@ -31,6 +31,8 @@ const form = {
 };
 
 export function SignInView() {
+  const { t } = useTranslation('auth', { keyPrefix: 'login' });
+
   const router = useRouter();
 
   const { formData, formError, handleInputChange, isValidForm } = useDebounceForm(form);
@@ -39,25 +41,23 @@ export function SignInView() {
 
   const handleLogin = useLogin();
 
+  const handleApiError = useErrorHandle();
+
   const handleSignIn = async () => {
     if (!isValidForm()) {
       return;
     }
 
-    try {
+    handleApiError(async () => {
       const data = await login(formData).unwrap();
       if (!data) {
         return;
       }
 
       handleLogin(data);
-      console.log('Login successful:', data);
 
       router.push('/');
-    } catch (error) {
-      console.log('Login error:', error);
-      handleError(error, 'Login failed!');
-    }
+    }, 'Login failed!');
   };
 
   const renderForm = (
@@ -71,7 +71,7 @@ export function SignInView() {
       <TextField
         fullWidth
         name="email"
-        label="Email address"
+        label={t('emailLabel')}
         value={formData.email}
         error={!!formError.email}
         helperText={formError.email}
@@ -83,11 +83,12 @@ export function SignInView() {
       />
 
       <Link variant="body2" color="inherit" sx={{ mb: 1.5 }}>
-        Forgot password?
+        {t('forgotPassword')}
       </Link>
 
       <PasswordInput
-        inpLabel="Password"
+        required
+        label={t('passwordLabel')}
         name="password"
         value={formData.password}
         error={formError.password}
@@ -106,7 +107,7 @@ export function SignInView() {
         onClick={handleSignIn}
         loading={isLoading}
       >
-        Sign in
+        {t('loginBtnText')}
       </Button>
     </Box>
   );
@@ -122,17 +123,27 @@ export function SignInView() {
           mb: 5,
         }}
       >
-        <Typography variant="h5">Sign in</Typography>
+        <Typography variant="h5">{t('title')}</Typography>
         <Typography
           variant="body2"
           sx={{
             color: 'text.secondary',
           }}
         >
-          Don’t have an account?
-          <Link component={RouterLink} variant="subtitle2" sx={{ ml: 0.5 }} to={ROUTES.REGISTER}>
-            Get started
-          </Link>
+          <Trans
+            i18nKey="login.subtitle"
+            ns="auth"
+            components={{
+              l: (
+                <Link
+                  component={RouterLink}
+                  variant="subtitle2"
+                  sx={{ ml: 0.5 }}
+                  to={ROUTES.REGISTER}
+                />
+              ),
+            }}
+          />
         </Typography>
       </Box>
       {renderForm}
@@ -141,7 +152,7 @@ export function SignInView() {
           variant="overline"
           sx={{ color: 'text.secondary', fontWeight: 'fontWeightMedium' }}
         >
-          OR
+          {t('or')}
         </Typography>
       </Divider>
       <Box

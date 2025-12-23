@@ -5,7 +5,7 @@ export function useTable() {
   const [page, setPage] = useState(0);
   const [orderBy, setOrderBy] = useState('name');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<number[]>([]);
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
 
   const onSort = useCallback(
@@ -17,8 +17,10 @@ export function useTable() {
     [order, orderBy]
   );
 
-  const onSelectAllRows = useCallback((checked: boolean, newSelecteds: string[]) => {
+  const onSelectAllRows = useCallback((checked: boolean, newSelecteds: number[]) => {
     if (checked) {
+      console.log(newSelecteds);
+
       setSelected(newSelecteds);
       return;
     }
@@ -26,10 +28,12 @@ export function useTable() {
   }, []);
 
   const onSelectRow = useCallback(
-    (inputValue: string) => {
-      const newSelected = selected.includes(inputValue)
-        ? selected.filter((value) => value !== inputValue)
-        : [...selected, inputValue];
+    (id: number) => {
+      const newSelected = selected.includes(id)
+        ? selected.filter((value) => value !== id)
+        : [...selected, id];
+
+      console.log(newSelected);
 
       setSelected(newSelected);
     },
@@ -52,6 +56,10 @@ export function useTable() {
     [onResetPage]
   );
 
+  const onSelectedRowsDeleted = useCallback(() => {
+    setSelected([]);
+  }, []);
+
   return {
     page,
     order,
@@ -64,5 +72,6 @@ export function useTable() {
     onChangePage,
     onSelectAllRows,
     onChangeRowsPerPage,
+    onSelectedRowsDeleted,
   };
 }

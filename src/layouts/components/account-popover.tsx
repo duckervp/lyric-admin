@@ -1,6 +1,7 @@
 import type { IconButtonProps } from '@mui/material/IconButton';
 
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -12,7 +13,6 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
-import { ROUTES } from 'src/routes/config';
 import { useRouter, usePathname } from 'src/routes/hooks';
 
 import useLogout from 'src/hooks/use-logout';
@@ -33,6 +33,8 @@ export type AccountPopoverProps = IconButtonProps & {
 };
 
 export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps) {
+  const { t } = useTranslation('common', { keyPrefix: 'accountPopover' });
+  
   const router = useRouter();
 
   const pathname = usePathname();
@@ -45,7 +47,6 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
 
   const handleLogoutClick = () => {
     handleLogout();
-    router.push(ROUTES.LOGIN);
   }
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -144,7 +145,7 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
 
         <Box sx={{ p: 1 }}>
           <Button fullWidth color="error" size="medium" variant="text" onClick={handleLogoutClick}>
-            Logout
+            {t('logoutBtnText')}
           </Button>
         </Box>
       </Popover>

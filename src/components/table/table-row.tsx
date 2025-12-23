@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // import Box from '@mui/material/Box';
 // import Avatar from '@mui/material/Avatar';
@@ -26,8 +27,8 @@ type CustomTableRowProps = {
   config: RowConfigs;
   selected: boolean;
   onSelectRow: () => void;
-  onEditRow: (id: number) => void;
-  onDeleteRow: (id: number) => void;
+  onEditRow: () => void;
+  onDeleteRow: () => void;
 };
 
 export function CustomTableRow({
@@ -38,6 +39,8 @@ export function CustomTableRow({
   onEditRow,
   onDeleteRow,
 }: CustomTableRowProps) {
+  const { t } = useTranslation('common', { keyPrefix: 'table.row' });
+
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -48,13 +51,13 @@ export function CustomTableRow({
     setOpenPopover(null);
   }, []);
 
-  const handleEditRow = (id: number) => {
-    onEditRow(id);
+  const handleEditRow = () => {
+    onEditRow();
     handleClosePopover();
   };
 
-  const handleDeleteRow = (id: number) => {
-    onDeleteRow(id);
+  const handleDeleteRow = () => {
+    onDeleteRow();
     handleClosePopover();
   };
 
@@ -131,14 +134,14 @@ export function CustomTableRow({
             },
           }}
         >
-          <MenuItem onClick={() => handleEditRow(row.id)}>
+          <MenuItem onClick={handleEditRow}>
             <Iconify icon="solar:pen-bold" />
-            Edit
+            {t('editBtnText')}
           </MenuItem>
 
-          <MenuItem onClick={() => handleDeleteRow(row.id)} sx={{ color: 'error.main' }}>
+          <MenuItem onClick={handleDeleteRow} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
-            Delete
+            {t('deleteBtnText')}
           </MenuItem>
         </MenuList>
       </Popover>
