@@ -23,5 +23,11 @@
             "notFoundTitle": "Not found",
             "notFoundMessage": "No results found for <strong>\"{{searchQuery}}\"</strong>.<br /> Try checking for typos or using complete words."
         }
+    },
+    "profileNav": {
+        "title": "Profile Manager",
+        "personalInfo": "Personal Info",
+        "security": "Security",
+        "settings": "Settings"
     }
 }

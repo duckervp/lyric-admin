@@ -15,6 +15,7 @@ import { ROUTES } from './config';
 
 export const DashboardPage = lazy(() => import('src/pages/dashboard'));
 export const ProfilePage = lazy(() => import('src/pages/profile'));
+export const SettingPage = lazy(() => import('src/pages/setting'));
 export const UserPage = lazy(() => import('src/pages/user'));
 export const SongPage = lazy(() => import('src/pages/song'));
 export const ArtistPage = lazy(() => import('src/pages/artist'));
@@ -51,7 +52,10 @@ export const routesSection: RouteObject[] = [
         </Suspense>
       </ProfileLayout>
     ),
-    children: [{ path: ROUTES.PROFILE, element: <ProfilePage /> }],
+    children: [
+      { path: ROUTES.PROFILE, element: <ProfilePage /> },
+      { path: ROUTES.SETTINGS, element: <SettingPage /> },
+    ],
   },
   {
     path: ROUTES.LOGIN,

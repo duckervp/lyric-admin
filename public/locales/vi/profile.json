@@ -1,0 +1,34 @@
+{
+  "main": {
+    "title": "Quản lý hồ sơ",
+    "basicForm": {
+      "title": "Cập nhật thông tin",
+      "description": "Cập nhật ảnh đại diện và thông tin cá nhân của bạn.",
+      "name": "Tên",
+      "email": "Email",
+      "saveChangesBtnText": "Lưu thay đổi",
+      "cancelBtnText": "Hủy"
+    },
+    "passwordForm": {
+      "title": "Cập nhật mật khẩu",
+      "description": "Bảo mật tài khoản của bạn bằng mật khẩu mạnh.",
+      "currentPassword": "Mật khẩu hiện tại",
+      "newPassword": "Mật khẩu mới",
+      "confirmPassword": "Xác nhận mật khẩu",
+      "updateBtnText": "Cập nhật mật khẩu",
+      "suggestion": "Mật khẩu phải có ít nhất 6 ký tự và bao gồm cả chữ cái và số."
+    },
+    "dangerZone": {
+      "title": "Vô hiệu hóa tài khoản",
+      "warning": "Sau khi vô hiệu hóa, dữ liệu tài khoản sẽ không thể khôi phục.",
+      "deactivateBtnText": "Vô hiệu hóa"
+    }
+  },
+  "settings": {
+    "language": {
+      "title": "Cài đặt ngôn ngữ",
+      "description": "Thiết lập ngôn ngữ",
+      "current": "Ngôn ngữ hiện tại"
+    }
+  }
+}

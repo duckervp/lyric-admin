@@ -23,5 +23,11 @@
       "notFoundTitle": "Không tìm thấy",
       "notFoundMessage": "Không tìm thấy kết quả cho <strong>\"{{searchQuery}}\"</strong>.<br /> Vui lòng kiểm tra lỗi chính tả hoặc thử tìm bằng từ khóa đầy đủ."
     }
+  },
+  "profileNav": {
+    "title": "Quản lý hồ sơ",
+    "personalInfo": "Thông tin cá nhân",
+    "security": "Bảo mật",
+    "settings": "Cài đặt"
   }
 }

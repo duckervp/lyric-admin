@@ -1,5 +1,5 @@
 {
-    "main": {
+  "main": {
       "title": "Profile Manager",
       "basicForm": {
         "title": "Information Update",
@@ -23,5 +23,12 @@
             "warning": "Once deleted, account data cannot be recovered.",
             "deactivateBtnText": "Deactivate"
         }
+  },
+  "settings": {
+    "language": {
+      "title": "Language Settings",
+      "description": "Set the language",
+      "current": "Current Language"
+    }
   }
 }

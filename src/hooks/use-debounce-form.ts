@@ -3,6 +3,9 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import { shallowEqual } from 'src/utils/check';
 import { validateField } from 'src/utils/validation';
 
+import { useAppSelector } from 'src/app/hooks';
+import { selectCurrentLang } from 'src/app/api/lang/langSlice';
+
 import { useDebounce } from './use-debounce';
 
 export default function useDebounceForm<T extends Record<string, any>>(form: Form<T>) {
@@ -33,11 +36,15 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
   } | null>(null);
   const [debouncedFields, setDebouncedFields] = useState<Set<string>>(new Set());
 
+  const [forceInvalid, setForceInvalid] = useState<boolean>(false);
+
   // Keep a mutable copy of formData
   const formDataRef = useRef<T>(form.initialState);
 
   // Debounce the input value
   const debouncedInput = useDebounce(inputValue, delay);
+
+  const currentLang = useAppSelector(selectCurrentLang);
 
   // Update form data and validate when debounced input changes
   useEffect(() => {
@@ -51,7 +58,6 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
         form.requiredFields.includes(name),
         formDataRef.current
       );
-      console.log('error', error);
       setFormError((prevError) => ({ ...prevError, [name]: error }));
 
       // Remove the field from debouncedFields since it's being updated
@@ -116,7 +122,7 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
     const noDebouncePending = debouncedFields.size === 0;
     // console.log("noDebouncePending", noDebouncePending);
 
-    return allFilled && noErrors && noDebouncePending && !shallowEqual(form.initialState, formDataRef.current);
+    return !forceInvalid && allFilled && noErrors && noDebouncePending && !shallowEqual(form.initialState, formDataRef.current);
   };
 
   const resetForm = useCallback(
@@ -136,5 +142,7 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
     [form]
   );
 
-  return { formData, formError, handleInputChange, setFormError, isValidForm, resetForm };
+  const invalidForm = () => setForceInvalid(true);
+
+  return { formData, formError, handleInputChange, setFormError, isValidForm, resetForm, invalidForm };
 }

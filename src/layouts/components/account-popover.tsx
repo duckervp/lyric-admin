@@ -13,7 +13,6 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
-import { ROUTES } from 'src/routes/config';
 import { useRouter, usePathname } from 'src/routes/hooks';
 
 import useLogout from 'src/hooks/use-logout';
@@ -48,7 +47,6 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
 
   const handleLogoutClick = () => {
     handleLogout();
-    router.push(ROUTES.LOGIN);
   }
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {

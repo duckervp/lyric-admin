@@ -50,6 +50,8 @@ export function TextInput({
         error={!!error}
         helperText={error}
         onChange={handleInputChange}
+        onInput={handleInputChange}
+        // onBlur={handleInputChange}
         sx={{ mb: 0 }}
         slotProps={{
           inputLabel: { shrink: true },

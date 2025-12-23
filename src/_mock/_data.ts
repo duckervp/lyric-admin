@@ -98,20 +98,36 @@ export const _products = [...Array(24)].map((_, index) => {
 
 // ----------------------------------------------------------------------
 
-export const _langs = [
-  {
-    value: 'vi',
-    label: 'Vietnamese',
-    icon: '/assets/icons/flags/ic-flag-vi.svg',
-    locale: 'viVN',
-  },
-  {
-    value: 'en',
-    label: 'English',
-    icon: '/assets/icons/flags/ic-flag-en.svg',
-    locale: 'enUS',
-  },
-];
+export const _langs = {
+  viVN: [
+    {
+      value: 'vi',
+      label: 'Tiếng Việt',
+      icon: '/assets/icons/flags/ic-flag-vi.svg',
+      locale: 'viVN',
+    },
+    {
+      value: 'en',
+      label: 'Tiếng Anh',
+      icon: '/assets/icons/flags/ic-flag-en.svg',
+      locale: 'enUS',
+    },
+  ],
+  enUS: [
+    {
+      value: 'vi',
+      label: 'Vietnamese',
+      icon: '/assets/icons/flags/ic-flag-vi.svg',
+      locale: 'viVN',
+    },
+    {
+      value: 'en',
+      label: 'English',
+      icon: '/assets/icons/flags/ic-flag-en.svg',
+      locale: 'enUS',
+    },
+  ]
+};
 
 // ----------------------------------------------------------------------
 

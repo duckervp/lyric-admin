@@ -53,11 +53,9 @@ export function SignUpView() {
       }
 
       handleLogin(data);
-      console.log('Register successful:', data);
 
       router.push('/');
     } catch (error) {
-      console.log('Register error:', error);
       handleError(error, 'Register failed!');
     }
   };

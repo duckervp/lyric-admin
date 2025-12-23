@@ -11,6 +11,8 @@ import { useAppSelector } from 'src/app/hooks';
 import { _langs, _notifications } from 'src/_mock';
 import { selectCurrentLang } from 'src/app/api/lang/langSlice';
 
+import { Logo } from 'src/components/logo';
+
 import { NavMobile, NavDesktop } from './nav';
 import { layoutClasses } from '../core/classes';
 import { _account } from '../nav-config-account';
@@ -24,6 +26,7 @@ import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
 import { AccountPopover } from '../components/account-popover';
 import { LanguagePopover } from '../components/language-popover';
+import { ProfileMainSection } from '../core/profile-main-section';
 // import { NotificationsPopover } from '../components/notifications-popover';
 
 import type { MainSectionProps } from '../core/main-section';
@@ -89,7 +92,7 @@ export function DashboardLayout({
           <Searchbar /> */}
 
           {/** @slot Language popover */}
-          <LanguagePopover data={_langs} />
+          {/* <LanguagePopover data={_langs} /> */}
 
           {/* * @slot Notifications popover
           <NotificationsPopover data={_notifications} /> */}
@@ -196,8 +199,9 @@ export function ProfileLayout({
       ),
       leftArea: (
         <>
+          <Logo />
           {/** @slot Nav mobile */}
-          <MenuButton
+          {/* <MenuButton
             onClick={onOpen}
             sx={{ mr: 1, ml: -1, [theme.breakpoints.up(layoutQuery)]: { display: 'none' } }}
           />
@@ -206,7 +210,7 @@ export function ProfileLayout({
             open={open}
             onClose={onClose}
             workspaces={_workspaces}
-          />
+          /> */}
         </>
       ),
       rightArea: (
@@ -215,7 +219,7 @@ export function ProfileLayout({
           <Searchbar /> */}
 
           {/** @slot Language popover */}
-          <LanguagePopover data={_langs} />
+          {/* <LanguagePopover data={_langs} /> */}
 
           {/* * @slot Notifications popover
           <NotificationsPopover data={_notifications} /> */}
@@ -240,7 +244,7 @@ export function ProfileLayout({
 
   const renderFooter = () => null;
 
-  const renderMain = () => <MainSection {...slotProps?.main}>{children}</MainSection>;
+  const renderMain = () => <ProfileMainSection {...slotProps?.main}>{children}</ProfileMainSection>;
 
   return (
     <LayoutSection
