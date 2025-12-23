@@ -65,7 +65,7 @@ export function ArtistView() {
       onDeleteRow={handleDeleteRow}
       onBatchDeleteRows={handleDeleteRows}
       headLabel={[
-        { id: 'name', label: t('columns.name') },
+        { id: 'name', label: t('columns.name'), minWidth: 200 },
         { id: 'role', label: t('columns.role') },
         { id: 'bio', label: t('columns.bio') },
         { id: '' },
@@ -83,6 +83,7 @@ export function ArtistView() {
               {row.name}
             </Box>
           ),
+          minWidth: 200,
         },
         {
           field: 'role',
@@ -98,7 +99,14 @@ export function ArtistView() {
             </Label>
           ),
         },
-        { field: 'bio' },
+        {
+          field: 'bio',
+          render: () => (
+            <Typography noWrap sx={{ maxWidth: { lg: 600, md: 400, xs: 300 } }}>
+              {row.bio}
+            </Typography>
+          ),
+        },
       ]}
       renderDeleteDialogContent={(rowData: any) => (
         <Typography variant="body2">

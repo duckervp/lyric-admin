@@ -72,7 +72,7 @@ export function UserView() {
         { id: 'name', label: t('columns.name') },
         { id: 'email', label: t('columns.email') },
         { id: 'role', label: t('columns.role') },
-        { id: 'verified', label: t('columns.verified'), align: 'center' },
+        { id: 'verified', label: t('columns.verified'), align: 'center', minWidth: 100 },
         { id: 'active', label: t('columns.active') },
         { id: '' },
       ]}
@@ -106,6 +106,7 @@ export function UserView() {
             ) : (
               '-'
             ),
+          minWidth: 100,
         },
         {
           field: 'active',

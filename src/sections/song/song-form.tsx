@@ -17,6 +17,7 @@ import CardContent from '@mui/material/CardContent';
 import useDebounceForm from 'src/hooks/use-debounce-form';
 
 import { handleError } from 'src/utils/notify';
+import { generateSlug } from 'src/utils/format-string';
 
 import { useGetAllArtistsQuery } from 'src/app/api/artist/artistApiSlice';
 import {
@@ -49,11 +50,10 @@ const form: Form<any> = {
     artist: '',
     description: '',
     releaseAt: '',
-    slug: '',
     imageUrl: '',
     lyric: '',
   },
-  requiredFields: ['title', 'slug', 'artist'],
+  requiredFields: ['title', 'artist'],
 };
 
 const mapPayload = (formData: any) => ({
@@ -61,7 +61,6 @@ const mapPayload = (formData: any) => ({
   artist: formData.artist || '',
   description: formData.description || '',
   releaseAt: formData.releaseAt || '',
-  slug: formData.slug || '',
   imageUrl: formData.imageUrl || '',
   lyric: formData.lyric || '',
 });
@@ -76,6 +75,7 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
   const [artists, setArtists] = useState<Artist[]>([]);
   const [songArtists, setSongArtists] = useState<SongArtist[]>([]);
   const { data: artistData } = useGetAllArtistsQuery({});
+  const [slug, setSlug] = useState<string>('');
 
   useEffect(() => {
     if (artistData && artistData.data) {
@@ -85,18 +85,19 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
 
   const initialState = useMemo(() => {
     if (id && data?.data) {
-      const artist = data.data;
+      const song = data.data;
 
-      setSongArtists(artist.artists);
+      setSongArtists(song.artists);
+
+      setSlug(song.slug);
 
       return {
-        title: artist.title || '',
-        artist: artist.artist || '',
-        description: artist.description || '',
-        releaseAt: artist.releaseAt || '',
-        slug: artist.slug || '',
-        imageUrl: artist.imageUrl || '',
-        lyric: artist.lyric || '',
+        title: song.title || '',
+        artist: song.artist || '',
+        description: song.description || '',
+        releaseAt: song.releaseAt || '',
+        imageUrl: song.imageUrl || '',
+        lyric: song.lyric || '',
       };
     }
     return form.initialState;
@@ -104,7 +105,7 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
 
   const formRequiredFields = useMemo(() => {
     if (id && data?.data) {
-      return ['title', 'slug', 'artist'];
+      return ['title', 'artist'];
     }
     return form.requiredFields;
   }, [id, data]);
@@ -114,9 +115,15 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
     requiredFields: formRequiredFields,
   });
 
+  useEffect(() => {
+    if (formData.title) {
+      setSlug(generateSlug(formData.title));
+    }
+  }, [formData.title]);
+
   const handleSave = async () => {
     try {
-      const payload = { ...mapPayload(formData), artists: songArtists };
+      const payload = { ...mapPayload(formData), artists: songArtists, slug };
       if (id) {
         await updateSong({ id, payload }).unwrap();
       } else {
@@ -133,6 +140,7 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
     removeId();
     resetForm();
     setSongArtists([]);
+    setSlug('');
   };
 
   if (isLoading) {
@@ -151,9 +159,9 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
       <Grid container spacing={4}>
         {/* Left Column: Metadata */}
         <Grid size={{ xs: 12, lg: 7 }}>
-          <Card elevation={4} sx={{ p: 2 }}>
+          <Card elevation={4} sx={{}}>
             <CardContent>
-              <Grid container spacing={3}>
+              <Grid container spacing={3.5}>
                 <Grid size={{ xs: 12, md: 6 }}>
                   <TextInput
                     required
@@ -180,13 +188,12 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
 
                 <Grid size={{ xs: 12, md: 6 }}>
                   <TextInput
-                    required
                     label={t('form.slug')}
                     name="slug"
-                    value={formData.slug}
-                    error={formError.slug}
+                    value={slug}
                     placeholder="midnight-city"
-                    handleInputChange={handleInputChange}
+                    handleInputChange={(e) => setSlug(e.target.value)}
+                    disabled
                   />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
@@ -207,12 +214,72 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
                     value={formData.description}
                     error={formError.description}
                     handleInputChange={handleInputChange}
-                    multiline={4}
+                    multiline={6}
                   />
                 </Grid>
               </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
 
-              <Divider sx={{ mt: 4, mb: 2 }} />
+        {/* Right Column: Visuals & Lyrics */}
+        <Grid size={{ xs: 12, lg: 5 }}>
+          <Card elevation={4} sx={{}}>
+            <CardContent>
+              <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                {t('form.coverArtwork')}
+              </Typography>
+              <Paper
+                variant="outlined"
+                sx={{
+                  width: '100%',
+                  aspectRatio: '1/1',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderStyle: 'dashed',
+                  borderColor: 'divider',
+                  bgcolor: 'background.default',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  cursor: 'pointer',
+                  transition: 'border-color 0.2s',
+                  '&:hover': {
+                    borderColor: 'primary.main',
+                  },
+                }}
+                component="label"
+              >
+                {id && formData.imageUrl ? (
+                  <Box
+                    component="img"
+                    // src={previewImage}
+                    alt="Cover Preview"
+                    sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                ) : (
+                  <>
+                    <Box>
+                      <ImageIcon sx={{ fontSize: 40, color: 'text.secondary' }} />
+                    </Box>
+                    <Typography variant="body2" color="text.secondary">
+                      {t('form.uploadTip')}
+                    </Typography>
+                    <Typography variant="caption" color="text.disabled" sx={{ mt: 0.5 }}>
+                      {t('form.recommend')}: 1080x1080
+                    </Typography>
+                  </>
+                )}
+                <input type="file" hidden accept="image/*" onChange={() => 1} />
+              </Paper>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid size={{ xs: 12 }}>
+          <Card elevation={4} sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+            <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
               <Box>
                 <SongArtistList
                   artists={artists}
@@ -224,78 +291,23 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
           </Card>
         </Grid>
 
-        {/* Right Column: Visuals & Lyrics */}
-        <Grid size={{ xs: 12, lg: 5 }}>
-          <Stack spacing={4}>
-            <Card elevation={4}>
-              <CardContent>
-                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                  {t('form.coverArtwork')}
-                </Typography>
-                <Paper
-                  variant="outlined"
-                  sx={{
-                    width: '100%',
-                    aspectRatio: '1/1',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderStyle: 'dashed',
-                    borderColor: 'divider',
-                    bgcolor: 'background.default',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    cursor: 'pointer',
-                    transition: 'border-color 0.2s',
-                    '&:hover': {
-                      borderColor: 'primary.main',
-                    },
-                  }}
-                  component="label"
-                >
-                  {id && formData.imageUrl ? (
-                    <Box
-                      component="img"
-                      // src={previewImage}
-                      alt="Cover Preview"
-                      sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                  ) : (
-                    <>
-                      <Box>
-                        <ImageIcon sx={{ fontSize: 40, color: 'text.secondary' }} />
-                      </Box>
-                      <Typography variant="body2" color="text.secondary">
-                        {t('form.uploadTip')}
-                      </Typography>
-                      <Typography variant="caption" color="text.disabled" sx={{ mt: 0.5 }}>
-                        {t('form.recommend')}: 1080x1080
-                      </Typography>
-                    </>
-                  )}
-                  <input type="file" hidden accept="image/*" onChange={() => 1} />
-                </Paper>
-              </CardContent>
-            </Card>
-
-            <Card elevation={4} sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-              <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                  {t('form.lyric')}
-                </Typography>
-                <TextInput
-                  required
-                  name="lyric"
-                  value={formData.lyric}
-                  error={formError.lyric}
-                  placeholder="Verse 1..."
-                  handleInputChange={handleInputChange}
-                  multiline={10}
-                />
-              </CardContent>
-            </Card>
-          </Stack>
+        <Grid size={{ xs: 12 }}>
+          <Card elevation={4} sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+            <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+              <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                {t('form.lyric')}
+              </Typography>
+              <TextInput
+                required
+                name="lyric"
+                value={formData.lyric}
+                error={formError.lyric}
+                placeholder="Verse 1..."
+                handleInputChange={handleInputChange}
+                multiline={10}
+              />
+            </CardContent>
+          </Card>
         </Grid>
       </Grid>
     </EditDialog>

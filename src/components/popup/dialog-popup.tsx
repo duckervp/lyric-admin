@@ -47,19 +47,20 @@ export function DialogPopup({
           {children}
         </Box>
       </Box>
-      <Divider />
       <Box
         sx={{
-          px: 3,
-          py: 2,
           display: 'flex',
           flexDirection: 'column',
           flex: 1,
           position: 'sticky',
           bottom: 0,
+          backgroundColor: '#fff',
         }}
       >
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 'auto' }}>{actions}</Box>
+        <Divider />
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 'auto', px: 3, py: 2 }}>
+          {actions}
+        </Box>
       </Box>
     </Dialog>
   );

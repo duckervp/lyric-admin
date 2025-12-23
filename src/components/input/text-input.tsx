@@ -8,7 +8,7 @@ type TextInputProps = {
   type?: string;
   required?: boolean;
   value: string;
-  error: string;
+  error?: string;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   multiline?: number;
   placeholder?: string;
@@ -59,6 +59,7 @@ export function TextInput({
         placeholder={placeholder}
         multiline={!!multiline}
         minRows={multiline}
+        maxRows={multiline}
         disabled={disabled}
       />
     </Box>

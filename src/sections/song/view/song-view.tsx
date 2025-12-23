@@ -67,15 +67,15 @@ export function SongView() {
       onDeleteRow={handleDeleteRow}
       onBatchDeleteRows={handleDeleteRows}
       headLabel={[
-        { id: 'title', label: t('columns.title') },
+        { id: 'title', label: t('columns.title'), minWidth: 200 },
         { id: 'mainArtistName', label: t('columns.artist') },
-        { id: 'description', label: t('columns.description') },
         { id: 'releaseAt', label: t('columns.release'), align: 'right' },
         { id: '' },
       ]}
       rowConfigMap={(row: any) => [
         {
           field: 'title',
+          minWidth: 200,
         },
         {
           field: 'mainArtistName',
@@ -90,7 +90,6 @@ export function SongView() {
             </Box>
           ),
         },
-        { field: 'description' },
         {
           field: 'releaseAt',
           align: 'right',
