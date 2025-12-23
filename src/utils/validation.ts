@@ -1,7 +1,7 @@
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const errorMsg = {
-  viVN: {
+  enUS: {
     nameRequired: "Name is required!",
     nameLength: "Name must be at least 3 characters!",
     emailRequired: "Email is required!",
@@ -14,7 +14,7 @@ const errorMsg = {
     usernameRequired: "Username is required!",
     usernameLength: "Username must be at least 3 characters!"
   },
-  enUS: {
+  viVN: {
     nameRequired: "Tên là bắt buộc!",
     nameLength: "Tên phải có ít nhất 3 ký tự!",
     emailRequired: "Email là bắt buộc!",

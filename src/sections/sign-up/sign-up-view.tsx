@@ -1,3 +1,4 @@
+import { Trans, useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -12,9 +13,8 @@ import { ROUTES } from 'src/routes/config';
 import { useRouter } from 'src/routes/hooks';
 
 import useLogin from 'src/hooks/use-login';
+import useErrorHandle from 'src/hooks/use-error-handle';
 import useDebounceForm from 'src/hooks/use-debounce-form';
-
-import { handleError } from 'src/utils/notify';
 
 import { useRegisterMutation } from 'src/app/api/auth/authApiSlice';
 
@@ -33,6 +33,8 @@ const form = {
 };
 
 export function SignUpView() {
+  const { t } = useTranslation('auth', { keyPrefix: 'register' });
+
   const router = useRouter();
 
   const { formData, formError, handleInputChange, isValidForm } = useDebounceForm(form);
@@ -41,12 +43,14 @@ export function SignUpView() {
 
   const handleLogin = useLogin();
 
+  const handleApiError = useErrorHandle();
+
   const handleSignUp = async () => {
     if (!isValidForm()) {
       return;
     }
 
-    try {
+    handleApiError(async () => {
       const data = await register(formData).unwrap();
       if (!data) {
         return;
@@ -55,9 +59,7 @@ export function SignUpView() {
       handleLogin(data);
 
       router.push('/');
-    } catch (error) {
-      handleError(error, 'Register failed!');
-    }
+    }, 'Register failed!');
   };
 
   const renderForm = (
@@ -71,7 +73,7 @@ export function SignUpView() {
       <TextField
         fullWidth
         name="name"
-        label="Your name"
+        label={t('nameLabel')}
         value={formData.name}
         error={!!formError.name}
         helperText={formError.name}
@@ -85,7 +87,7 @@ export function SignUpView() {
       <TextField
         fullWidth
         name="email"
-        label="Email address"
+        label={t('emailLabel')}
         value={formData.email}
         error={!!formError.email}
         helperText={formError.email}
@@ -98,7 +100,7 @@ export function SignUpView() {
 
       <PasswordInput
         required
-        label="Password"
+        label={t('passwordLabel')}
         name="password"
         value={formData.password}
         error={formError.password}
@@ -108,10 +110,10 @@ export function SignUpView() {
 
       <PasswordInput
         required
-        label="Confirm password"
+        label={t('confirmPasswordLabel')}
         name="confirmPassword"
-        value={formData.password}
-        error={formError.password}
+        value={formData.confirmPassword}
+        error={formError.confirmPassword}
         handleInputChange={handleInputChange}
         sx={{ mb: 3 }}
       />
@@ -126,7 +128,7 @@ export function SignUpView() {
         onClick={handleSignUp}
         loading={isLoading}
       >
-        Sign up
+        {t('registerBtnText')}
       </Button>
     </Box>
   );
@@ -142,17 +144,27 @@ export function SignUpView() {
           mb: 5,
         }}
       >
-        <Typography variant="h5">Sign up</Typography>
+        <Typography variant="h5">{t('title')}</Typography>
         <Typography
           variant="body2"
           sx={{
             color: 'text.secondary',
           }}
         >
-          Already have an account?
-          <Link component={RouterLink} variant="subtitle2" sx={{ ml: 0.5 }} to={ROUTES.LOGIN}>
-            Continue
-          </Link>
+          <Trans
+            i18nKey="register.subtitle"
+            ns="auth"
+            components={{
+              l: (
+                <Link
+                  component={RouterLink}
+                  variant="subtitle2"
+                  sx={{ ml: 0.5 }}
+                  to={ROUTES.LOGIN}
+                />
+              ),
+            }}
+          />
         </Typography>
       </Box>
       {renderForm}
@@ -161,7 +173,7 @@ export function SignUpView() {
           variant="overline"
           sx={{ color: 'text.secondary', fontWeight: 'fontWeightMedium' }}
         >
-          OR
+          {t('or')}
         </Typography>
       </Divider>
       <Box

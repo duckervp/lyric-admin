@@ -3,10 +3,11 @@ import type { CSSObject, Breakpoint } from '@mui/material/styles';
 import { merge } from 'es-toolkit';
 
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
 
-import { RouterLink } from 'src/routes/components';
+import { _langs } from 'src/_mock';
+import { useAppSelector } from 'src/app/hooks';
+import { selectCurrentLang } from 'src/app/api/lang/langSlice';
 
 import { Logo } from 'src/components/logo';
 
@@ -14,6 +15,7 @@ import { AuthContent } from './content';
 import { MainSection } from '../core/main-section';
 import { LayoutSection } from '../core/layout-section';
 import { HeaderSection } from '../core/header-section';
+import { LanguagePopover } from '../components/language-popover';
 
 import type { AuthContentProps } from './content';
 import type { MainSectionProps } from '../core/main-section';
@@ -40,6 +42,8 @@ export function AuthLayout({
   slotProps,
   layoutQuery = 'md',
 }: AuthLayoutProps) {
+  const currentLang = useAppSelector(selectCurrentLang);
+
   const renderHeader = () => {
     const headerSlotProps: HeaderSectionProps['slotProps'] = { container: { maxWidth: false } };
 
@@ -57,10 +61,8 @@ export function AuthLayout({
       ),
       rightArea: (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 1.5 } }}>
-          {/** @slot Help link */}
-          <Link href="#" component={RouterLink} color="inherit" sx={{ typography: 'subtitle2' }}>
-            Need help?
-          </Link>
+          {/** @slot Language Popover */}
+          <LanguagePopover data={_langs[currentLang.locale]} />
         </Box>
       ),
     };

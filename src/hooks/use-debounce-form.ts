@@ -56,7 +56,8 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
         name,
         value as string,
         form.requiredFields.includes(name),
-        formDataRef.current
+        formDataRef.current,
+        currentLang.locale
       );
       setFormError((prevError) => ({ ...prevError, [name]: error }));
 
@@ -67,7 +68,7 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
         return updated;
       });
     }
-  }, [debouncedInput, form.requiredFields]);
+  }, [debouncedInput, form.requiredFields, currentLang]);
 
   useEffect(() => {
     setFormData(form.initialState);
