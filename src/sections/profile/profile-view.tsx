@@ -103,6 +103,7 @@ export function ProfileView() {
     const payload = { name: formData.name, imageUrl: formData.imageUrl };
     await updateUserProfile({ id: currentUser?.id, payload });
     invalidForm();
+    resetForm(payload);
   };
 
   const handleUpdatePassword = async () => {

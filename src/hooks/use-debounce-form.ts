@@ -22,6 +22,7 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
   delay: number
 ) {
   const [formData, setFormData] = useState<T>(form.initialState);
+  const [formInitData, setFormInitData] = useState<T>(form.initialState);
   const [formError, setFormError] = useState<Record<keyof T, string>>(
     () =>
       Object.fromEntries(Object.keys(form.initialState).map((key) => [key, ''])) as Record<
@@ -90,6 +91,8 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
   }, [form.initialState]);
 
   const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setForceInvalid(false);
+
     const { type, name, value: val, checked } = event.target;
 
     const value = type === 'checkbox' ? checked : val;
@@ -123,12 +126,13 @@ export function useCustomDelayDebounceForm<T extends Record<string, any>>(
     const noDebouncePending = debouncedFields.size === 0;
     // console.log("noDebouncePending", noDebouncePending);
 
-    return !forceInvalid && allFilled && noErrors && noDebouncePending && !shallowEqual(form.initialState, formDataRef.current);
+    return !forceInvalid && allFilled && noErrors && noDebouncePending && !shallowEqual(formInitData, formDataRef.current);
   };
 
   const resetForm = useCallback(
     (data?: Partial<typeof form.initialState>) => {
       const newFormData = { ...form.initialState, ...data };
+      setFormInitData(newFormData);
       setFormData(newFormData);
       setFormError(
         Object.fromEntries(Object.keys(form.initialState).map((key) => [key, ''])) as Record<
