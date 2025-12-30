@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Autocomplete from '@mui/material/Autocomplete';
-
-import { Select } from './custom-select';
 // ----------------------------------------------------------
 type ArtistSelectInputProps = {
   required?: boolean;
@@ -59,7 +57,7 @@ export function ArtistSelectInput({
         fullWidth
         multiple={false}
         options={options ?? []}
-        value={selected}
+        value={selected || ''}
         getOptionLabel={(option) => option.name ?? ''}
         onChange={(event, newValue) => {
           if (handleInputChange) {

@@ -1,5 +1,4 @@
 import type { Form } from 'src/hooks/use-debounce-form';
-import type { Artist, SongArtist } from 'src/utils/type';
 
 import { useTranslation } from 'react-i18next';
 import { useMemo, useState, useEffect } from 'react';
@@ -16,6 +15,7 @@ import useDebounceForm from 'src/hooks/use-debounce-form';
 
 import { handleError } from 'src/utils/notify';
 import { generateSlug } from 'src/utils/format-string';
+import { ArtistRole, type Artist, type SongArtist } from 'src/utils/type';
 
 import { useGetAllArtistsQuery } from 'src/app/api/artist/artistApiSlice';
 import {
@@ -45,18 +45,18 @@ type SongFormDialogProps = {
 const form: Form<any> = {
   initialState: {
     title: '',
-    artist: '',
+    artistId: '',
     description: '',
     releaseAt: '',
     imageUrl: '',
     lyric: '',
   },
-  requiredFields: ['title', 'artist'],
+  requiredFields: ['title', 'artistId'],
 };
 
 const mapPayload = (formData: any) => ({
   title: formData.title || '',
-  artist: formData.artist || '',
+  artistId: Number(formData.artistId) || 0,
   description: formData.description || '',
   releaseAt: formData.releaseAt || '',
   imageUrl: formData.imageUrl || '',
@@ -91,7 +91,7 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
 
       return {
         title: song.title || '',
-        artist: song.artist || '',
+        artistId: song.artistId || '',
         description: song.description || '',
         releaseAt: song.releaseAt || '',
         imageUrl: song.imageUrl || '',
@@ -103,7 +103,7 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
 
   const formRequiredFields = useMemo(() => {
     if (id && data?.data) {
-      return ['title', 'artist'];
+      return ['title', 'artistId'];
     }
     return form.requiredFields;
   }, [id, data]);
@@ -118,6 +118,27 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
       setSlug(generateSlug(formData.title));
     }
   }, [formData.title]);
+
+  useEffect(() => {
+    if (formData.artistId) {
+      setSongArtists((oldState) => {
+        const newArtists: SongArtist[] = [
+          {
+            artistId: Number(formData.artistId),
+            role: ArtistRole.SINGER,
+          },
+        ];
+
+        oldState.forEach((item) => {
+          if (Number(item.artistId) != Number(formData.artistId)) {
+            newArtists.push(item);
+          }
+        });
+
+        return newArtists;
+      });
+    }
+  }, [formData.artistId]);
 
   const handleSave = async () => {
     try {
@@ -175,9 +196,9 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
                   <ArtistSelectInput
                     required
                     label={t('form.artist')}
-                    name="artist"
-                    value={formData.artist}
-                    error={formError.artist}
+                    name="artistId"
+                    value={formData.artistId}
+                    error={formError.artistId}
                     options={artists}
                     placeholder="e.g. M83"
                     handleInputChange={handleInputChange}

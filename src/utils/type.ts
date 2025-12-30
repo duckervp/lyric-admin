@@ -11,7 +11,7 @@ export enum ArtistRole {
 
 export interface SongArtist {
   id?: number;
-  songId: number;
+  songId?: number;
   artistId: number;
   role: ArtistRole;
 }

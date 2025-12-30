@@ -60,7 +60,7 @@ const isValidDate = (date: DatePickerFormat) =>
  */
 export function fDateTime(date: DatePickerFormat, template?: string): string {
   if (!isValidDate(date)) {
-    return 'Invalid date';
+    return '-';
   }
 
   return dayjs(date).format(template ?? formatPatterns.dateTime);
