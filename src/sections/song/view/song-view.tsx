@@ -69,7 +69,10 @@ export function SongView() {
       headLabel={[
         { id: 'title', label: t('columns.title'), minWidth: 200 },
         { id: 'mainArtistName', label: t('columns.artist') },
-        { id: 'releaseAt', label: t('columns.release'), align: 'right' },
+        { id: 'view', label: t('columns.view'), align: 'center' },
+        { id: 'fire', label: t('columns.fire'), align: 'center' },
+        { id: 'snow', label: t('columns.snow'), align: 'center' },
+        { id: 'releaseAt', label: t('columns.release'), align: 'center' },
         { id: '' },
       ]}
       rowConfigMap={(row: any) => [
@@ -91,8 +94,20 @@ export function SongView() {
           ),
         },
         {
+          field: 'view',
+          align: 'center',
+        },
+        {
+          field: 'fire',
+          align: 'center',
+        },
+        {
+          field: 'snow',
+          align: 'center',
+        },
+        {
           field: 'releaseAt',
-          align: 'right',
+          align: 'center',
           render: () => fDateTime(row.releaseAt, formatPatterns.year),
         },
       ]}

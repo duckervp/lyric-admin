@@ -7,7 +7,10 @@
       "title": "Tiêu đề",
       "artist": "Nghệ sĩ chính",
       "description": "Mô tả",
-      "release": "Phát hành"
+      "release": "Phát hành",
+      "view": "View",
+      "fire": "Fire",
+      "snow": "Snow"
     },
     "deleteDialogContent": "Tất cả các liên kết nghệ sĩ liên quan đến bài hát này cũng sẽ bị xóa. Bạn có chắc chắn muốn xóa bài hát <b>{{name}}</b> không?",
     "batchDeleteDialogContent_one": "Bạn có chắc chắn muốn xóa bài hát đã chọn không?",

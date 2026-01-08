@@ -7,7 +7,10 @@
       "title": "Title",
       "artist": "Main Artist",
       "description": "Description",
-      "release": "Release"
+      "release": "Release",
+      "view": "View",
+      "fire": "Fire",
+      "snow": "Snow"
     },
     "deleteDialogContent": "All related artist's song references also will be removed. Are you sure to delete<b>{{name}}</b> artist?",
     "batchDeleteDialogContent_one": "Are you sure to delete the selected song?",

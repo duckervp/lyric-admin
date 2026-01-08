@@ -101,13 +101,13 @@ export const _products = [...Array(24)].map((_, index) => {
 export const _langs = {
   viVN: [
     {
-      value: 'vi',
+      value: 'vi-VN',
       label: 'Tiếng Việt',
       icon: '/assets/icons/flags/ic-flag-vi.svg',
       locale: 'viVN',
     },
     {
-      value: 'en',
+      value: 'en-US',
       label: 'Tiếng Anh',
       icon: '/assets/icons/flags/ic-flag-en.svg',
       locale: 'enUS',
@@ -115,13 +115,13 @@ export const _langs = {
   ],
   enUS: [
     {
-      value: 'vi',
+      value: 'vi-VN',
       label: 'Vietnamese',
       icon: '/assets/icons/flags/ic-flag-vi.svg',
       locale: 'viVN',
     },
     {
-      value: 'en',
+      value: 'en-US',
       label: 'English',
       icon: '/assets/icons/flags/ic-flag-en.svg',
       locale: 'enUS',

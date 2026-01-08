@@ -1,7 +1,7 @@
 import type { Form } from 'src/hooks/use-debounce-form';
 
-import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useMemo, useState, useEffect } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -62,21 +62,6 @@ export default function UserFormDialog({ id, removeId, open, setOpen }: UserForm
 
   const [updatePassword, setUpdatePassword] = useState(false);
 
-  const initialState = useMemo(() => {
-    if (id && data?.data) {
-      const user = data.data;
-      return {
-        name: user.name || '',
-        email: user.email || '',
-        password: '',
-        admin: user.role === ROLES.ADMIN,
-        active: !!user.active,
-        verified: !!user.verified,
-      };
-    }
-    return form.initialState;
-  }, [id, data]);
-
   const formRequiredFields = useMemo(() => {
     if (id && data?.data) {
       return ['name', 'email'];
@@ -85,9 +70,23 @@ export default function UserFormDialog({ id, removeId, open, setOpen }: UserForm
   }, [id, data]);
 
   const { formData, formError, handleInputChange, isValidForm, resetForm } = useDebounceForm({
-    initialState,
+    ...form,
     requiredFields: formRequiredFields,
   });
+
+  useEffect(() => {
+    if (id && data?.data) {
+      const user = data.data;
+      resetForm({
+        name: user.name || '',
+        email: user.email || '',
+        password: '',
+        admin: user.role === ROLES.ADMIN,
+        active: !!user.active,
+        verified: !!user.verified,
+      });
+    }
+  }, [id, data?.data, resetForm]);
 
   const handleSave = async () => {
     const payload = mapPayload(formData);

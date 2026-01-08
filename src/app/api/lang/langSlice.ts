@@ -12,10 +12,10 @@ type LangProps = {
 }
 
 const initialState: LangProps = {
-    value: 'vi',
-    label: 'Vietnamese',
-    icon: '/assets/icons/ic_flag_vi.svg',
-    locale: 'viVN',
+    value: 'en-US',
+    label: 'English',
+    icon: '/assets/icons/flags/ic-flag-en.svg',
+    locale: 'enUS',
 }
 
 const langSlice = createSlice({

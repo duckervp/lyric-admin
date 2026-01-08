@@ -30,7 +30,6 @@ const SongArtistList: React.FC<SongArtistListProps> = ({ artists, songArtists, o
 
   const addArtist = () => {
     const newArtist: SongArtist = {
-      songId: 0,
       artistId: 0,
       role: ArtistRole.SINGER,
     };

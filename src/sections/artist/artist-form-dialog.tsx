@@ -1,6 +1,6 @@
 import type { Form } from 'src/hooks/use-debounce-form';
 
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Stack from '@mui/material/Stack';
@@ -55,18 +55,6 @@ export default function ArtistFormDialog({ id, removeId, open, setOpen }: Artist
   const [createArtist] = useCreateArtistMutation();
   const [updateArtist] = useUpdateArtistMutation();
 
-  const initialState = useMemo(() => {
-    if (id && data?.data) {
-      const artist = data.data;
-      return {
-        name: artist.name || '',
-        role: artist.role || '',
-        bio: artist.bio || '',
-      };
-    }
-    return form.initialState;
-  }, [id, data]);
-
   const formRequiredFields = useMemo(() => {
     if (id && data?.data) {
       return ['name', 'role'];
@@ -75,9 +63,20 @@ export default function ArtistFormDialog({ id, removeId, open, setOpen }: Artist
   }, [id, data]);
 
   const { formData, formError, handleInputChange, isValidForm, resetForm } = useDebounceForm({
-    initialState,
+    ...form,
     requiredFields: formRequiredFields,
   });
+
+  useEffect(() => {
+    if (id && data?.data) {
+      const artist = data.data;
+      resetForm({
+        name: artist.name || '',
+        role: artist.role || '',
+        bio: artist.bio || '',
+      });
+    }
+  }, [id, data?.data, resetForm]);
 
   const handleSave = async () => {
     try {

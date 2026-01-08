@@ -14,6 +14,7 @@ import CardContent from '@mui/material/CardContent';
 import useDebounceForm from 'src/hooks/use-debounce-form';
 
 import { handleError } from 'src/utils/notify';
+import { shallowEqual } from 'src/utils/check';
 import { generateSlug } from 'src/utils/format-string';
 import { ArtistRole, type Artist, type SongArtist } from 'src/utils/type';
 
@@ -72,6 +73,7 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
 
   const [artists, setArtists] = useState<Artist[]>([]);
   const [songArtists, setSongArtists] = useState<SongArtist[]>([]);
+  const [orgSongArtists, setOrgSongArtists] = useState<SongArtist[]>([]);
   const { data: artistData } = useGetAllArtistsQuery({});
   const [slug, setSlug] = useState<string>('');
 
@@ -81,26 +83,6 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
     }
   }, [artistData]);
 
-  const initialState = useMemo(() => {
-    if (id && data?.data) {
-      const song = data.data;
-
-      setSongArtists(song.artists);
-
-      setSlug(song.slug);
-
-      return {
-        title: song.title || '',
-        artistId: song.artistId || '',
-        description: song.description || '',
-        releaseAt: song.releaseAt || '',
-        imageUrl: song.imageUrl || '',
-        lyric: song.lyric || '',
-      };
-    }
-    return form.initialState;
-  }, [id, data]);
-
   const formRequiredFields = useMemo(() => {
     if (id && data?.data) {
       return ['title', 'artistId'];
@@ -108,10 +90,35 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
     return form.requiredFields;
   }, [id, data]);
 
-  const { formData, formError, handleInputChange, isValidForm, resetForm } = useDebounceForm({
-    initialState,
+  const {
+    formData,
+    formError,
+    handleInputChange,
+    isValidForm,
+    resetForm,
+    markExternalDirty,
+    clearExternalDirty,
+  } = useDebounceForm({
+    ...form,
     requiredFields: formRequiredFields,
   });
+
+  useEffect(() => {
+    if (id && data?.data) {
+      const song = data.data;
+      resetForm({
+        title: song.title || '',
+        artistId: song.artistId || '',
+        description: song.description || '',
+        releaseAt: song.releaseAt || '',
+        imageUrl: song.imageUrl || '',
+        lyric: song.lyric || '',
+      });
+      setSongArtists(song.artists);
+      setOrgSongArtists(song.artists);
+      setSlug(song.slug);
+    }
+  }, [id, data?.data, resetForm]);
 
   useEffect(() => {
     if (formData.title) {
@@ -159,7 +166,52 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
     removeId();
     resetForm();
     setSongArtists([]);
+    clearExternalDirty();
     setSlug('');
+  };
+
+  const updateSongArtists = (items: SongArtist[]) => {
+    setSongArtists(items);
+
+    let isDiff = false;
+    if (orgSongArtists.length != items.length) {
+      isDiff = true;
+    } else {
+      const sortedOrg = [...orgSongArtists].sort((a, b) => {
+        const idDiff = a.artistId - b.artistId;
+        if (idDiff !== 0) return idDiff;
+
+        return a.role.localeCompare(b.role, undefined, {
+          sensitivity: 'base',
+        });
+      });
+
+      const sortedItems = [...items].sort((a, b) => {
+        const idDiff = a.artistId - b.artistId;
+        if (idDiff !== 0) return idDiff;
+
+        return a.role.localeCompare(b.role, undefined, {
+          sensitivity: 'base',
+        });
+      });
+      for (let i = 0; i <= sortedOrg.length; i++) {
+        console.log(sortedOrg.at(i), sortedItems.at(i));
+        if (
+          sortedOrg.at(i) &&
+          sortedItems.at(i) &&
+          (sortedOrg.at(i)?.artistId !== sortedItems.at(i)?.artistId ||
+            sortedOrg.at(i)?.role !== sortedItems.at(i)?.role)
+        ) {
+          isDiff = true;
+        }
+      }
+    }
+
+    if (isDiff) {
+      markExternalDirty();
+    } else {
+      clearExternalDirty();
+    }
   };
 
   if (isLoading) {
@@ -303,7 +355,7 @@ export default function SongFormDialog({ id, removeId, open, setOpen }: SongForm
                 <SongArtistList
                   artists={artists}
                   songArtists={songArtists}
-                  onChange={setSongArtists}
+                  onChange={updateSongArtists}
                 />
               </Box>
             </CardContent>
